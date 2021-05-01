@@ -18,10 +18,7 @@
     <item row="0" column="0">
      <widget class="QGraphicsView" name="graphicsView"/>
     </item>
-    <item row="3" column="0">
-     <layout class="QVBoxLayout" name="verticalLayout"/>
-    </item>
-    <item row="0" column="2">
+    <item row="0" column="1">
      <widget class="QTabWidget" name="tabWidget">
       <property name="enabled">
        <bool>true</bool>
@@ -611,14 +608,10 @@
      </widget>
     </item>
     <item row="2" column="0">
-     <widget class="QTextEdit" name="textEdit"/>
+     <layout class="QVBoxLayout" name="verticalLayout"/>
     </item>
     <item row="1" column="0">
-     <widget class="QPushButton" name="pushButton_2">
-      <property name="text">
-       <string>PushButton</string>
-      </property>
-     </widget>
+     <widget class="QTextEdit" name="textEdit"/>
     </item>
    </layout>
   </widget>
