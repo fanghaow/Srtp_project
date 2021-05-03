@@ -232,6 +232,18 @@ class MyPyQT_Form(QtWidgets.QMainWindow,Ui_MainWindow):
         picture()
         plt.show()
 
+
+
+
+
+
+
+
+
+
+
+
+
     def clicked_track(self,track = 0):
 
         if track ==0:

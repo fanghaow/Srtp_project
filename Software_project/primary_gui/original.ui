@@ -373,12 +373,12 @@
             </item>
             <item>
              <property name="text">
-              <string>Gray</string>
+              <string>Yellow</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>White</string>
+              <string>Cyan</string>
              </property>
             </item>
             <item>
@@ -400,11 +400,14 @@
           </item>
           <item row="2" column="1">
            <widget class="QCheckBox" name="checkVisible_1">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string>Visible1</string>
             </property>
             <property name="checked">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -490,11 +493,14 @@
           </item>
           <item row="2" column="1">
            <widget class="QCheckBox" name="checkVisible_2">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string>Visible2</string>
             </property>
             <property name="checked">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -580,11 +586,14 @@
           </item>
           <item row="2" column="1">
            <widget class="QCheckBox" name="checkVisible_3">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string>Visible3</string>
             </property>
             <property name="checked">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -594,14 +603,14 @@
        <widget class="QPushButton" name="pushButton">
         <property name="geometry">
          <rect>
-          <x>80</x>
+          <x>50</x>
           <y>490</y>
-          <width>81</width>
+          <width>131</width>
           <height>31</height>
          </rect>
         </property>
         <property name="text">
-         <string>track</string>
+         <string>track/untrack</string>
         </property>
        </widget>
       </widget>
@@ -759,7 +768,7 @@
    <sender>pushButton</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>push()</slot>
+   <slot>clicked_track()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>901</x>
@@ -819,14 +828,31 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>comboColor_1</sender>
+   <signal>currentTextChanged(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>selectionchange1()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>869</x>
+     <y>137</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>744</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>select1()</slot>
   <slot>select2()</slot>
   <slot>select3()</slot>
-  <slot>push()</slot>
+  <slot>clicked_track()</slot>
   <slot>width1_range()</slot>
   <slot>width2_range()</slot>
   <slot>width3_range()</slot>
+  <slot>selectionchange1()</slot>
  </slots>
 </ui>
