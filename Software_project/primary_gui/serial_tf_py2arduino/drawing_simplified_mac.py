@@ -37,32 +37,41 @@ for i in range(256):
 import serial  # 导入serial库
 
 ser = serial.Serial('COM7', baudrate=9600, bytesize=8, parity='N', stopbits=1,
-                    timeout=0.5)  # 打开端口，每一秒返回一个消息 ,设置自己的串口
+                    timeout=0.01)  # 打开端口，每一秒返回一个消息 ,设置自己的串口
+
+demo1 = b"G"  # 将0转换为ASCII码方便发送
+demo2 = b"1"  # 同理
 # try模块用来结束循环（靠抛出异常）
 try:
     for i in range(1):
         # 通过电脑端给arduino发送起始命令：'G'
-        act = 'G'
-        if (act != 'G' ):
-            print('请输入正确的字符')
-        else:
-            ser.write(act.encode())  # 写s字符  需要用 encode 进行编码
+        c = input('请输入指令:')
+        c = ord(c)  # 将c转换为UTF-8标准数字
+        if (c == 48):
+            ser.write(demo1)  # ser.write在于向串口中写入数据
+        if (c == 49):
+            ser.write(demo2)
+        time = 0
         data = []
 
         # 开始从arduino接收数据
         while(data == []): #直到读到有效数据才停止循环
             a = ser.readline()
+
             if(str(a,encoding='gbk')!='' and str(a,encoding='gbk')!='\r\n'):
                 data.append(str(a,encoding='gbk'))
+            time += 1
+            if time >= 1000:
+                print('运行%d次，次数过多，未能读到数据' % (time))
+                break
         yy = data[0].split(',') # 将字符型数据分割成字符型列表
         y = [int(i) for i in yy if i.isdigit()] # 保存整型数据于y中
         y.append(sum(y)/255)
-        print(y)
+        print('运行第%d次，读取到数据:'%(time),y)
         print(len(y))
 except Exception as e:
     print(e)
     ser.close()  # 抛出异常后关闭端口
-
 
 # windows:
 plt.rcParams['font.family']='SimHei'
