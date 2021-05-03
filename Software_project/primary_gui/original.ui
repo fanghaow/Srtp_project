@@ -591,6 +591,19 @@
          </layout>
         </widget>
        </widget>
+       <widget class="QPushButton" name="pushButton">
+        <property name="geometry">
+         <rect>
+          <x>80</x>
+          <y>490</y>
+          <width>81</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>track</string>
+        </property>
+       </widget>
       </widget>
      </widget>
     </item>
@@ -742,10 +755,27 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>push()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>901</x>
+     <y>570</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>747</x>
+     <y>590</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>select1()</slot>
   <slot>select2()</slot>
   <slot>select3()</slot>
+  <slot>push()</slot>
  </slots>
 </ui>
