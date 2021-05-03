@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'Mainwindow_ax.ui'
+# Form implementation generated from reading ui file 'Mainwindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.0
 #
@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(891, 853)
+        MainWindow.resize(1031, 752)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -24,12 +24,27 @@ class Ui_MainWindow(object):
         self.horizontalLayout_7.setObjectName("horizontalLayout_7")
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
-        self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
+        self.tabWidget_2 = QtWidgets.QTabWidget(self.centralwidget)
+        self.tabWidget_2.setObjectName("tabWidget_2")
+        self.tab_3 = QtWidgets.QWidget()
+        self.tab_3.setObjectName("tab_3")
+        self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.tab_3)
+        self.verticalLayout_5.setObjectName("verticalLayout_5")
+        self.groupBox = QtWidgets.QGroupBox(self.tab_3)
+        self.groupBox.setTitle("")
         self.groupBox.setObjectName("groupBox")
-        self.verticalLayout.addWidget(self.groupBox)
-        self.groupBox_2 = QtWidgets.QGroupBox(self.centralwidget)
+        self.verticalLayout_5.addWidget(self.groupBox)
+        self.tabWidget_2.addTab(self.tab_3, "")
+        self.tab_4 = QtWidgets.QWidget()
+        self.tab_4.setObjectName("tab_4")
+        self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.tab_4)
+        self.verticalLayout_6.setObjectName("verticalLayout_6")
+        self.groupBox_2 = QtWidgets.QGroupBox(self.tab_4)
+        self.groupBox_2.setTitle("")
         self.groupBox_2.setObjectName("groupBox_2")
-        self.verticalLayout.addWidget(self.groupBox_2)
+        self.verticalLayout_6.addWidget(self.groupBox_2)
+        self.tabWidget_2.addTab(self.tab_4, "")
+        self.verticalLayout.addWidget(self.tabWidget_2)
         self.horizontalLayout_7.addLayout(self.verticalLayout)
         self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
         self.tabWidget.setEnabled(True)
@@ -278,7 +293,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_4.setStretch(1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 891, 26))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1031, 23))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
@@ -328,14 +343,15 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget_2.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "水果光谱检测"))
-        self.groupBox.setTitle(_translate("MainWindow", "GroupBox"))
-        self.groupBox_2.setTitle(_translate("MainWindow", "GroupBox"))
+        self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_3), _translate("MainWindow", "Static plot"))
+        self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_4), _translate("MainWindow", "Dynamic plot"))
         self.groupSetting.setTitle(_translate("MainWindow", "Setting"))
         self.labelFruit.setText(_translate("MainWindow", "Fruit"))
         self.comboBox.setItemText(0, _translate("MainWindow", "None"))
