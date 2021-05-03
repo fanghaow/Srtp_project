@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'original_11_26_wfh_3.0.ui'
+# Form implementation generated from reading ui file 'original_11_26_wfh_4.0.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.0
 #
@@ -171,7 +171,7 @@ class Ui_MainWindow(object):
         self.comboColor_1.addItem("")
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.comboColor_1)
         self.checkVisible_1 = QtWidgets.QCheckBox(self.formLayoutWidget)
-        self.checkVisible_1.setChecked(True)
+        # self.checkVisible_1.setChecked(True)
         self.checkVisible_1.setObjectName("checkVisible_1")
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.checkVisible_1)
         self.groupLine_2 = QtWidgets.QGroupBox(self.tab_2)
@@ -203,7 +203,7 @@ class Ui_MainWindow(object):
         self.comboColor_2.addItem("")
         self.formLayout_3.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.comboColor_2)
         self.checkVisible_2 = QtWidgets.QCheckBox(self.formLayoutWidget_3)
-        self.checkVisible_2.setChecked(True)
+        # self.checkVisible_2.setChecked(True)
         self.checkVisible_2.setObjectName("checkVisible_2")
         self.formLayout_3.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.checkVisible_2)
         self.groupLine_3 = QtWidgets.QGroupBox(self.tab_2)
@@ -235,7 +235,7 @@ class Ui_MainWindow(object):
         self.comboColor_3.addItem("")
         self.formLayout_4.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.comboColor_3)
         self.checkVisible_3 = QtWidgets.QCheckBox(self.formLayoutWidget_4)
-        self.checkVisible_3.setChecked(True)
+        # self.checkVisible_3.setChecked(True)
         self.checkVisible_3.setObjectName("checkVisible_3")
         self.formLayout_4.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.checkVisible_3)
         self.pushButton = QtWidgets.QPushButton(self.tab_2)
@@ -299,10 +299,10 @@ class Ui_MainWindow(object):
         self.checkVisible_1.clicked.connect(MainWindow.select1)
         self.checkVisible_2.clicked.connect(MainWindow.select2)
         self.checkVisible_3.clicked.connect(MainWindow.select3)
-        self.pushButton.clicked.connect(MainWindow.push)
-        self.horizontalSlider_1.sliderMoved['width1'].connect(MainWindow.width1_range)
-        self.horizontalSlider_3.sliderMoved['int'].connect(MainWindow.width2_range)
-        self.horizontalSlider_4.sliderMoved['int'].connect(MainWindow.width3_range)
+        self.pushButton.clicked.connect(MainWindow.clicked_track)
+        #self.horizontalSlider_1.valueChanged['int'].connect(MainWindow.width1_range)
+        #self.horizontalSlider_3.valueChanged['int'].connect(MainWindow.width2_range)
+        #self.horizontalSlider_4.valueChanged['int'].connect(MainWindow.width3_range)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):

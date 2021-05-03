@@ -773,7 +773,7 @@
   </connection>
   <connection>
    <sender>horizontalSlider_1</sender>
-   <signal>sliderMoved(int)</signal>
+   <signal>valueChanged(int)</signal>
    <receiver>MainWindow</receiver>
    <slot>width1_range()</slot>
    <hints>
@@ -789,7 +789,7 @@
   </connection>
   <connection>
    <sender>horizontalSlider_3</sender>
-   <signal>sliderMoved(int)</signal>
+   <signal>valueChanged(int)</signal>
    <receiver>MainWindow</receiver>
    <slot>width2_range()</slot>
    <hints>
@@ -805,7 +805,7 @@
   </connection>
   <connection>
    <sender>horizontalSlider_4</sender>
-   <signal>sliderMoved(int)</signal>
+   <signal>valueChanged(int)</signal>
    <receiver>MainWindow</receiver>
    <slot>width3_range()</slot>
    <hints>
