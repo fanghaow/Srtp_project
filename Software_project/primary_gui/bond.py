@@ -4,13 +4,15 @@ from PyQt5.QtWidgets import QDialog, QPushButton, QVBoxLayout
 
 from matplotlib import pyplot as plt
 import numpy as np
-from math import sin
+import math
 from matplotlib.widgets import Cursor
 
 import sys
 from PyQt5 import QtWidgets
-from original_11_24_wfh import Ui_MainWindow
+from original_11_26_wfh_5 import Ui_MainWindow
 #
+# global track
+# track =0
 def picture():
     A0 = 590.8939192
     B1 = 2.303196492
@@ -36,7 +38,7 @@ def picture():
     plt.rcParams['axes.unicode_minus'] = False
 
     # 绘图，设置标签
-    fig, ax = plt.subplots(figsize=(8, 5))
+    fig, ax = plt.subplots(figsize=(8, 6))
     if y==y1:
         ax.set_title("wavelength——强度--one")
     elif y==y2:
@@ -48,11 +50,13 @@ def picture():
 
     max_i = y.index(max(y))  # 获取y[i]最大值对应的i
     min_i = y.index(min(y))  # 获取y[i]最小值对应的i
-    ax.plot(x, y, color='b', linewidth=0.8, linestyle='-', label='光谱发生相关曲线')
-    ax.axvline(x=x[max_i], ls="-.", c="red", linewidth=1)  # 添加垂直直线
-    ax.axhline(y=max(y), ls="-.", c="red", linewidth=1, label='最大峰峰值')  # 添加垂直直线
-    ax.axvline(x=x[min_i], ls="-.", c="green", linewidth=1)  # 添加垂直直线
-    ax.axhline(y=min(y), ls="-.", c="green", linewidth=1, label='最大峰峰值')  # 添加垂直直线
+    # global width1
+    # width = 0.8
+    ax.plot(x, y, color=colo, linewidth=width, linestyle='-', label='光谱发生相关曲线')
+    ax.axvline(x=x[max_i], ls="-.", c="magenta", linewidth=1.6)  # 添加垂直直线
+    ax.axhline(y=max(y), ls="-.", c="magenta", linewidth=1.6, label='最大峰峰值')  # 添加垂直直线
+    ax.axvline(x=x[min_i], ls="-.", c="cyan", linewidth=1.6)  # 添加垂直直线
+    ax.axhline(y=min(y), ls="-.", c="cyan", linewidth=1.6, label='最大峰峰值')  # 添加垂直直线
     ax.legend(bbox_to_anchor=(0, 1), loc='lower left',
               framealpha=0.5)  # 同时画多条曲线 图例设置参考：https://www.cnblogs.com/lfri/p/12248629.html
 
@@ -148,13 +152,17 @@ class MyPyQT_Form(QtWidgets.QMainWindow,Ui_MainWindow):
 
 
     def select1(self,count1 = 0):
-
         if count1 % 2 == 1:
-            global y, y1, y2, y3
+            global y, y1, y2, y3,colo,width
+            colo = 'k'
+            width= 0.8
+            import xlrd
+            excel = xlrd.open_workbook("./1123三次鲸鱼有效数据.xlsx")  # 读取excel文件，相当于打开excel
+            sheet = excel.sheet_by_name("Sheet1")  # 通过sheet页的名字，跳转sheet页
             y1 = [0 for i in range(256)]
-            y = [0 for i in range(256)]
             for i in range(256):
-                y1[i] = 0.1 * sin(0.1 * i)
+                y1[i] = sheet.cell_value(0, i)  # sheet.row_values(2)#获取某一行的数据，返回第二行的列表
+            y = [0 for i in range(256)]
             y = y1
             picture()
             plt.show()
@@ -165,11 +173,16 @@ class MyPyQT_Form(QtWidgets.QMainWindow,Ui_MainWindow):
 
     def select2(self,count2 = 0):
         if count2 % 2 == 1:
-            global y, y1, y2, y3
+            global y, y1, y2, y3, colo,width
+            colo = 'y'
+            width = 0.8
+            import xlrd
+            excel = xlrd.open_workbook("./1123三次鲸鱼有效数据.xlsx")  # 读取excel文件，相当于打开excel
+            sheet = excel.sheet_by_name("Sheet1")  # 通过sheet页的名字，跳转sheet页
             y2 = [0 for i in range(256)]
-            y = [0 for i in range(256)]
             for i in range(256):
-                y2[i] = 0.1 * sin(0.1 * i) ** 2
+                y2[i] = sheet.cell_value(1, i)  # sheet.row_values(2)#获取某一行的数据，返回第二行的列表
+            y = [0 for i in range(256)]
             y = y2
             picture()
             plt.show()
@@ -180,11 +193,16 @@ class MyPyQT_Form(QtWidgets.QMainWindow,Ui_MainWindow):
 
     def select3(self,count3 = 0):
         if count3 % 2 == 1:
-            global y, y1, y2, y3
+            global y, y1, y2, y3, colo,width
+            colo = 'b'
+            width = 0.8
+            import xlrd
+            excel = xlrd.open_workbook("./1123三次鲸鱼有效数据.xlsx")  # 读取excel文件，相当于打开excel
+            sheet = excel.sheet_by_name("Sheet1")  # 通过sheet页的名字，跳转sheet页
             y3 = [0 for i in range(256)]
-            y = [0 for i in range(256)]
             for i in range(256):
-                y3[i] = 4e-4 * abs(i) * sin(i)
+                y3[i] = sheet.cell_value(2, i)  # sheet.row_values(2)#获取某一行的数据，返回第二行的列表
+            y = [0 for i in range(256)]
             y = y3
             picture()
             plt.show()
@@ -192,6 +210,144 @@ class MyPyQT_Form(QtWidgets.QMainWindow,Ui_MainWindow):
         else:
             plt.close()
             print("曲线3关闭")
+    def width1_range(self):
+        print(self.horizontalSlider_1.value())
+        global width
+        width = self.horizontalSlider_1.value() / 100 * 0.8 + 0.8
+        plt.close()
+        picture()
+        plt.show()
+    def width2_range(self):
+        print(self.horizontalSlider_3.value())
+        global width
+        width = self.horizontalSlider_3.value() / 100 * 0.8 + 0.8
+        plt.close()
+        picture()
+        plt.show()
+    def width3_range(self):
+        print(self.horizontalSlider_4.value())
+        global width
+        width = self.horizontalSlider_4.value() / 100 * 0.8 + 0.8
+        plt.close()
+        picture()
+        plt.show()
+
+    def clicked_track(self,track = 0):
+
+        if track ==0:
+            track = 1
+        if track%2==1:
+            import numpy as np
+            import matplotlib
+            import matplotlib.pyplot as plt
+
+            # set up matplotlib
+            is_ipython = 'inline' in matplotlib.get_backend()
+            if is_ipython:
+                from IPython import display
+
+            plt.ion()
+
+            def plot_durations(yy):
+                plt.figure(3)
+                plt.clf()
+                plt.subplot(311)
+                plt.plot(yy[:, 0])
+                plt.subplot(312)
+                plt.plot(yy[:, 1])
+                plt.subplot(313)
+                plt.plot(yy[:, 2])
+
+                plt.pause(0.000001)  # pause a bit so that plots are updated
+                if is_ipython:
+                    display.clear_output(wait=True)
+                    display.display(plt.gcf())
+            global xx
+            xx= np.linspace(-10, 10, 500)
+            yy = []
+            for i in range(len(xx)):
+                y11 = np.cos(i / (3 * 3.14))
+                y22 = np.sin(i / (3 * 3.14)) * i
+                y33 = np.sin(i / (3 * 3.14)) * i**2
+                yy.append(np.array([y11, y22, y33]))  # 保存历史数据
+                plot_durations(np.array(yy))
+                print(track)
+                track = 2
+                if track ==400:
+                    break
+        else:
+            track = 400
+
+
+
+
+    def selectionchange1(self):
+
+        # 标签用来显示选中的文本
+        # currentText()：返回选中选项的文本
+
+        # self.btn1.setText(self.comboColor_1.currentText())
+        # print('Items in the list are:')
+        # 输出选项集合中每个选项的索引与对应的内容
+        # count()：返回选项集合中的数目
+        print(self.comboColor_1.currentText())
+        # for count in range(self.comboColor_1.count()):
+        #     print('Item' + str(count) + '=' + self.comboColor_1.itemText(count))
+        #     print('current index', 'selection changed', self.comboColor_1.currentText())
+        global colo,colo1,colo2,colo3
+
+        if self.comboColor_1.currentText()=='Black':
+            colo1 = 'k'
+        elif self.comboColor_1.currentText()=='Yellow':
+            colo1 = 'y'
+        elif self.comboColor_1.currentText()=='Red':
+            colo1 = 'r'
+        elif self.comboColor_1.currentText()=='Green':
+            colo1 = 'g'
+        elif self.comboColor_1.currentText()=='Blue':
+            colo1 = 'b'
+        elif self.comboColor_1.currentText()=='White':
+            colo1 = 'w'
+        colo = colo1
+        plt.close()
+        picture()
+        plt.show()
+    def selectionchange2(self):
+        global colo,colo1,colo2,colo3
+        if self.comboColor_2.currentText()=='Black':
+            colo2 = 'k'
+        elif self.comboColor_2.currentText()=='Yellow':
+            colo2 = 'y'
+        elif self.comboColor_2.currentText()=='Red':
+            colo2 = 'r'
+        elif self.comboColor_2.currentText()=='Green':
+            colo2 = 'g'
+        elif self.comboColor_2.currentText()=='Blue':
+            colo2 = 'b'
+        elif self.comboColor_2.currentText()=='White':
+            colo2 = 'w'
+        colo = colo2
+        plt.close()
+        picture()
+        plt.show()
+    def selectionchange3(self):
+        global colo,colo1,colo2,colo3
+        if self.comboColor_3.currentText()=='Black':
+            colo3 = 'k'
+        elif self.comboColor_3.currentText()=='Yellow':
+            colo3 = 'y'
+        elif self.comboColor_3.currentText()=='Red':
+            colo3 = 'r'
+        elif self.comboColor_3.currentText()=='Green':
+            colo3 = 'g'
+        elif self.comboColor_3.currentText()=='Blue':
+            colo3 = 'b'
+        elif self.comboColor_3.currentText()=='White':
+            colo3 = 'w'
+        colo = colo3
+        plt.close()
+        picture()
+        plt.show()
 
 
 if __name__ == '__main__':

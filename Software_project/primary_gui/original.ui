@@ -771,11 +771,62 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>horizontalSlider_1</sender>
+   <signal>sliderMoved(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>width1_range()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>913</x>
+     <y>100</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>958</x>
+     <y>35</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_3</sender>
+   <signal>sliderMoved(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>width2_range()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>912</x>
+     <y>269</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>882</x>
+     <y>32</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_4</sender>
+   <signal>sliderMoved(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>width3_range()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>913</x>
+     <y>422</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>735</x>
+     <y>35</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>select1()</slot>
   <slot>select2()</slot>
   <slot>select3()</slot>
   <slot>push()</slot>
+  <slot>width1_range()</slot>
+  <slot>width2_range()</slot>
+  <slot>width3_range()</slot>
  </slots>
 </ui>
