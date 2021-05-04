@@ -1,42 +1,30 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow
-import Mainwindow
-from Mainwindow import Ui_MainWindow
 import xlwt
 from datetime import datetime
 import numpy as np
-from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QVBoxLayout, QSizePolicy, QMessageBox, QWidget, \
     QPushButton, QFileDialog, QTextEdit, QAction, QGridLayout
-from PyQt5.QtGui import QIcon
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-import matplotlib.pyplot as plt
-import random
 import matplotlib
 matplotlib.use('Qt5Agg')
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5.QtCore import QTimer, pyqtSlot, QThread
 
 ####################### Head code #######################
-from matplotlib import pyplot as plt
-import numpy as np
-from PyQt5 import QtCore, QtWidgets
-from matplotlib.widgets import Cursor
+# import my web data module
+from Web_project.web_grep_test import web_data
+from Mainwindow import Ui_MainWindow
+import serial
 import xlrd
-import matplotlib
 matplotlib.use("Qt5Agg")  # 声明使用QT5
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.pyplot as plt
-from PyQt5 import QtCore, QtGui, QtWidgets
-
+from PyQt5 import QtWidgets
+import cv2
+# global variables
 system = 0
 
 class Myplot(FigureCanvas):
-    # def __init__(self):
-    #     self.fig, self.ax = plt.subplots(figsize=(6, 4), facecolor='#FFD7C4')
-    #     FigureCanvas.__init__(self, self.fig) #初始化激活widget中的plt部分
     def __init__(self, parent=None, width=5, height=3, dpi=100):
         # normalized for 中文显示和负号
         plt.rcParams['font.sans-serif'] = ['SimHei']
@@ -63,44 +51,16 @@ class Myplot(FigureCanvas):
         pass
 
     def change_sys(self):
-        # o represents 'windows', 1 represents 'mac'
+        # o : 'windows', 1 : 'mac'
         global system
         system = 1 - system
-        print('切换系统成功！！！')
-        # Ui_MainWindow().textEdit.setText('切换系统成功！！')
-
-    def GIF(self):
-        plt.rcParams['font.family']='SimHei'
-        plt.rcParams['font.sans-serif']=['SimHei']
-        plt.rcParams['axes.unicode_minus']=False
-        fig, ax = self.fig, self.ax
-        try:
-            # y1 = []
-            # for i in range(1000):
-            #     y1.append(np.sin(i/10))
-            #     ax.cla()
-            #     ax.set_title("Data")
-            #     ax.set_xlabel("Time/s")
-            #     ax.set_ylabel("Strength")
-            #     ax.set_xlim(0, (i+1)*1.5)
-            #     ax.set_ylim(-1, 1)
-            #     ax.grid()
-            #     ax.plot(y1, color='b', linewidth=0.8, linestyle='-', label='快乐曲线')
-            #     ax.legend(loc='best')
-            #     plt.pause(1e-1)
-            #     self.draw()
-            y = list(range(100))
-            ax.plot(y)
-            self.fig.draw()
-            print('nihao')
-        except:
-            print(Exception)
+        print('Transform operational system sucessfully!!')
 
     def on_press(self,event):
         pass
         self.draw()
         self.fig.canvas.mpl_connect('button_press_event', self.on_press)
-#############################################
+
 class static_fig(Myplot):
     def __init__(self, *args, **kwargs):
         Myplot.__init__(self, *args, **kwargs)
@@ -125,6 +85,14 @@ class dynamic_fig(Myplot):
         self.axes.set_title("signals")
         self.axes.set_xlabel("delay(s)")
         self.axes.set_ylabel("counts")
+        # set a suprise
+        img = cv2.imread('smile.jpg')
+        b, r = img[:, :, 0], img[:, :, 2]
+        img[:, :, 0], img[:, :, 2] = r, b
+        self.axes.imshow(img)
+        self.axes.set_title('不会真的有人觉得我会更新软件吧')
+
+#############################################
 
 class AppWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
@@ -132,8 +100,8 @@ class AppWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         # ^O^ static_fig can changed to any other function
         # self.fig1=static_fig(width=5, height=4, dpi=100)
-        self.fig1 = static_fig(width=5, height=3, dpi=72)
-        self.fig2 = dynamic_fig(width=5, height=3, dpi=72)
+        self.fig1 = static_fig(width=8, height=6, dpi=108)
+        self.fig2 = dynamic_fig(width=8, height=6, dpi=108)
         # add NavigationToolbar in the figure (widgets)
         self.fig_ntb1 = NavigationToolbar(self.fig1, self)
         self.fig_ntb2 = NavigationToolbar(self.fig2, self)
@@ -153,8 +121,6 @@ class AppWindow(QMainWindow, Ui_MainWindow):
         self._delay_t = []
         self._Static_on = 0
         self._update_on = 0
-        # my configuration
-        self.line_color = 'b'
 
     @pyqtSlot()
     def on_Static_plot_clicked(self):
@@ -181,93 +147,45 @@ class AppWindow(QMainWindow, Ui_MainWindow):
 
     def drawing(self):
         self.fig1.axes.cla()
-        A0 = 590.8939192; B1 = 2.303196492; B2 = -0.0004665871929; B3 = -0.000007877923077; B4 = 3.020550598E-08; B5 = -4.876599743E-11
-        x = [(A0 + B1 * i + B2 * i ** 2 + B3 * i ** 3 + B4 * i ** 4 + B5 * i ** 5) for i in range(256)]
+        x, y = load_data('excel')
 
-        # 读取excel
-        excel = xlrd.open_workbook(r"光谱仪正确的鲸鱼数据.xls")  # 读取excel文件，相当于打开excel
-        sheet = excel.sheet_by_name("Sheet1")  # 通过sheet页的名字，跳转sheet页
-
-        # 获取数据
-        y = [sheet.cell_value(0,i) for i in range(256)]
-
-        ############ python_to_arduino ###############
-        # import serial  # 导入serial库
-        #
-        # ser = serial.Serial('COM7', baudrate=9600, bytesize=8, parity='N', stopbits=1,
-        #                     timeout=0.01)  # 打开端口，每一秒返回一个消息 ,设置自己的串口
-        #
-        # demo1 = b"G"  # 将0转换为ASCII码方便发送
-        # demo2 = b"1"  # 同理
-        # # try模块用来结束循环（靠抛出异常）
-        # try:
-        #     for i in range(1):
-        #         # 通过电脑端给arduino发送起始命令：'G'
-        #         c = input('请输入指令:')
-        #         c = ord(c)  # 将c转换为UTF-8标准数字
-        #         if (c == 48):
-        #             ser.write(demo1)  # ser.write在于向串口中写入数据
-        #         if (c == 49):
-        #             ser.write(demo2)
-        #         time = 0
-        #         data = []
-        #
-        #         # 开始从arduino接收数据
-        #         while(data == []): #直到读到有效数据才停止循环
-        #             a = ser.readline()
-        #
-        #             if(str(a,encoding='gbk')!='' and str(a,encoding='gbk')!='\r\n'):
-        #                 data.append(str(a,encoding='gbk'))
-        #             time += 1
-        #             if time >= 1000:
-        #                 print('运行%d次，次数过多，未能读到数据' % (time))
-        #                 break
-        #         yy = data[0].split(',') # 将字符型数据分割成字符型列表
-        #         y = [int(i) for i in yy if i.isdigit()] # 保存整型数据于y中
-        #         y.append(sum(y)/255)
-        #         print('运行第%d次，读取到数据:'%(time),y)
-        #         print(len(y))
-        # except Exception as e:
-        #     print(e)
-        #     ser.close()  # 抛出异常后关闭端口
-        ##############################
-
-        # matplotlib设置字体
+        # matplotlib set font
         global system
         if system == 0:
-            plt.rcParams['font.family']='SimHei'
+            plt.rcParams['font.family']='SimHei' # windows chinese font
             plt.rcParams['font.sans-serif']=['SimHei']
             plt.rcParams['axes.unicode_minus']=False
         else:
-            plt.rcParams['font.sans-serif']=['Arial Unicode MS']  #mac中文显示方法，跟换字体文件名字可以更改显示出的文字类型
+            plt.rcParams['font.sans-serif']=['Arial Unicode MS']  # mac chinese font
             plt.rcParams['axes.unicode_minus']=False
 
-        # 设置标签
+        # set title
         fig, ax = self.fig1, self.fig1.axes
-        ax.set_title("wavelength——强度")
-        ax.set_xlabel("wavelength")
-        ax.set_ylabel("强度")  # 如若需要散点简单平滑曲线连接图，只要将scatter改成plot即可 plt.plot(x, y)
+        ax.set_title("Wavelength——Strenngth")
+        ax.set_xlabel("Wavelength")
+        ax.set_ylabel("Strength")
 
-        max_i = y.index(max(y)); min_i = y.index(min(y))    # 获取y[i]最大、最小值对应的i
-        ax.plot(x, y, color=self.line_color, linewidth=0.8, linestyle='-', label='光谱发生相关曲线')
-        ax.axvline(x=x[max_i], ls="-.", c="red", linewidth=1)  # 添加垂直直线
-        ax.axhline(y=max(y), ls="-.", c="red", linewidth=1, label='最大峰峰值')  # 添加垂直直线
-        ax.axvline(x=x[min_i], ls="-.", c="green", linewidth=1)  # 添加垂直直线
-        ax.axhline(y=min(y), ls="-.", c="green", linewidth=1, label='最大峰峰值')  # 添加垂直直线
+        max_i = y.index(max(y)); min_i = y.index(min(y))
+        ax.plot(x, y, color=config.line_color, linewidth=config.line_width, linestyle='-', label='光谱发生相关曲线')
+        ax.axvline(x=x[max_i], ls="-.", c="red", linewidth=1)
+        ax.axhline(y=max(y), ls="-.", c="red", linewidth=1, label='最大峰峰值')  # add horizontal straight line
+        ax.axvline(x=x[min_i], ls="-.", c="green", linewidth=1)
+        ax.axhline(y=min(y), ls="-.", c="green", linewidth=1, label='最大峰峰值')  # add vertical straight line
         ax.legend(bbox_to_anchor=(0, 1), loc='lower left',
-                  framealpha=0.5)  # 同时画多条曲线 图例设置参考：https://www.cnblogs.com/lfri/p/12248629.html
+                  framealpha=0.5)
 
-        # x、y轴精度设置
+        # set x、y axis
         my_x_ticks = np.arange(560, 1160, 20)
         my_y_ticks = np.arange(min(y) - (max(y) - min(y)) * 0.1, max(y) + (max(y) - min(y)) * 0.1, (max(y) - min(y)) / 20)
         plt.xticks(my_x_ticks, rotation=90)
         plt.yticks(my_y_ticks)
 
-        # 网格设置
-        plt.grid(b=True, color='b', linestyle='--', linewidth=0.5, alpha=0.3, axis='both', which='both')  # 网格、图例设置参考：https://www.cnblogs.com/zyg123/p/10519588.html
+        # set gird
+        plt.grid(b=True, color='b', linestyle='--', linewidth=0.5, alpha=0.3, axis='both', which='both')
 
-        fig.draw()  # 展示图片
-        print('hahahaha')
+        # show
+        fig.draw()
+        print('Static plot successfully!')
 
     @pyqtSlot()
     def on_dynamic_plot_clicked(self):
@@ -323,7 +241,8 @@ class AppWindow(QMainWindow, Ui_MainWindow):
         self.Static_plot.setEnabled(True)
         # self.Erase_plot.setEnabled(False)
 
-def openfile(): # 打开文件
+# My Functions
+def openfile():
     fname = QFileDialog.getOpenFileName(QMainWindow(),'打开文件','/',('Txt files (*.txt)'))  # fname = ('C:/Users/23573/Desktop/树莓派配置.txt', 'All Files (*)')
     print(fname)
     if fname[0]:
@@ -335,14 +254,14 @@ def openfile(): # 打开文件
         except:
             ui.textEdit.setText("打开文件失败，可能是文件类型错误")
 
-def savefile(): # 保存excel文件
+def savefile(): # save excel file
     fname = QFileDialog.getSaveFileName(QMainWindow(), "文件保存", "./", ("Excel Files (*.xls)"))
     print(fname)
     wavelength = list(range(256))
     data = [float(i) for i in (np.arange(0, 20, 256) + np.random.random((256, 1)))]
     style0 = xlwt.easyxf('font: name Times New Roman, color-index black, bold on',
-                         num_format_str='#,##0.00')  # ’Times New Roman‘ 字体，红色
-    style1 = xlwt.easyxf(num_format_str='D-MMM-YY')  #
+                         num_format_str='#,##0.00')  # ’Times New Roman‘ red font
+    style1 = xlwt.easyxf(num_format_str='D-MMM-YY')
     wb = xlwt.Workbook()
     ws = wb.add_sheet('Sheet1')
     ws.write(0, 0, '波长', style0)
@@ -357,8 +276,7 @@ def savefile(): # 保存excel文件
 
     wb.save(fname[0])
 
-def about(self):  # 关于
-    # print('about')
+def about():
     QtWidgets.QMessageBox.about(QMainWindow(), "About",
                                 """embedding_in_qt5.py example
 Copyright 2005 Florent Rougon, 2006 Darren Dale, 2015 Jens H Nielsen
@@ -372,30 +290,107 @@ modified versions may be distributed without limitation.
 This is modified from the embedding in qt4 example to show the difference
 between qt4 and qt5"""
                                     )
-def load_data():
+
+def load_data(formula):
+    if formula == 'excel':
+        # Formula1 : excel
+        A0 = 590.8939192; B1 = 2.303196492; B2 = -0.0004665871929; B3 = -0.000007877923077; B4 = 3.020550598E-08; B5 = -4.876599743E-11
+        wavelength = [(A0 + B1 * i + B2 * i ** 2 + B3 * i ** 3 + B4 * i ** 4 + B5 * i ** 5) for i in range(256)]
+        excel = xlrd.open_workbook(r"光谱仪正确的鲸鱼数据.xls")
+        sheet = excel.sheet_by_name("Sheet1")
+        strength = [sheet.cell_value(0,i) for i in range(256)]
+    elif formula == 'json':
+        # Formula2 : json
+        wd = web_data()
+        text = wd.web_str()
+        wd.json_down()
+        wavelength, strength = wd.proceed_json()
+        strength[0] = -1 # for '-infinity' is not supported by my axis setting
+    elif formula == 'arduino2py':
+        # Formula3 : arduino2py
+        ser = serial.Serial('COM7', baudrate=9600, bytesize=8, parity='N', stopbits=1,
+                            timeout=0.01)  # open a port, return a msg per second, set own serial
+        demo1, demo2 = b'G', b'1'  # tf 0 and 1 into bytes(ASCII) so that easily to send
+        try:
+            for i in range(1):
+                # py send arduino start commend ：'G'
+                c = input('请输入指令:')
+                c = ord(c)  # tf c to UTF-8 universal number
+                if (c == 48):
+                    ser.write(demo1)  # ser.write write data in serial
+                if (c == 49):
+                    ser.write(demo2)
+                time = 0
+                data = []
+                # start receive data from arduino
+                while(data == []): # loop until read data
+                    a = ser.readline()
+                    if(str(a,encoding='gbk')!='' and str(a,encoding='gbk')!='\r\n'):
+                        data.append(str(a,encoding='gbk'))
+                    time += 1
+                    if time >= 1000:
+                        print('运行%d次，次数过多，未能读到数据' % (time))
+                        break
+                yy = data[0].split(',') # split my str into list data
+                strength = [int(i) for i in yy if i.isdigit()] # save int data into y
+                strength.append(sum(y)/255)
+                print('运行第%d次，读取到数据:'%(time),strength)
+                print(len(y))
+        except Exception as e:
+            print(e)
+            ser.close()  # close my serial when get a exception
+    print('Wavelength :', wavelength)
+    print("strength :", strength)
+    return wavelength, strength
+
+def color_change1():
+    print('I am here!!!')
+    color_dict = {'Black':'k', 'Gray':'y', 'Red':'r', 'Green':'g', 'Blue':'b', 'White':'w'}
+    print('I change line color to :' ,color_dict[win.comboColor_1.currentText()])
+    config.line_color = color_dict[win.comboColor_1.currentText()]
+    win.drawing()
     pass
 
-def select1():
+def line_width1():
+    width = win.horizontalSlider_1.value() / 100 * 0.8 + 0.8
+    config.line_width = width
+    win.drawing()
     pass
 
+def visiable1():
+    ischecked = win.checkVisible_1.isChecked()
+    if ischecked == True:
+        win.drawing()
+    elif ischecked == False:
+        fig, ax = win.fig1, win.fig1.axes
+        ax.cla()
+        y = list(range(100))
+        ax.plot(y)
+        fig.draw()
+    pass
 
+class MyConfiguration():
+    def __init__(self):
+        self.line_color = 'b'
+        self.line_width = 0.8
 
 if __name__ == '__main__':
+    config = MyConfiguration()
     app = QApplication(sys.argv)
     MainWindow = QMainWindow()
     ui = Ui_MainWindow()
+    # Two windows i create : MainWindow and AppWindow! I just show AppWindow!
     ui.setupUi(MainWindow)
     # MainWindow.show()
-
     win = AppWindow()
     win.show()
-    # textEdit
-    ui.actionAbout.triggered.connect(about)
-    ui.actionOpen.triggered.connect(openfile)
-    ui.actionSave_Data.triggered.connect(savefile)
-    ui.checkVisible_1.clicked.connect(select1)
+    ###### My functions #######
+    win.actionAbout.triggered.connect(about)
+    win.actionOpen.triggered.connect(openfile)
+    win.actionSave_Data.triggered.connect(savefile)
+    win.checkVisible_1.clicked.connect(visiable1)
+    win.comboColor_1.currentTextChanged['QString'].connect(color_change1)
+    win.horizontalSlider_1.valueChanged['int'].connect(line_width1)
     # ui.pushButton.clicked.connect(Myplot.change_sys)
-    # ui.pushButton_2.clicked.connect(Myplot.GIF)
-    # ui.pushButton_2.clicked.connect(Myfigure.drawing)
-    #
+    #########################
     sys.exit(app.exec_())
