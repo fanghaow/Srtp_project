@@ -1,0 +1,25 @@
+目的                                     //命令
+terminal中更改运行目录                     cd C:\Users\23573\PycharmProjects
+查找网站域名对应的ip地址                     ping test.pypi.org
+                                        nslookup test.pypi.org #相比上面更全面
+                                        网站搜索：http://ip.tool.chinaz.com
+python打包                               import py文件包名（不需要加.py）
+                                        生成exe文件
+                                        打包成库，参考：https://blog.csdn.net/xujiahui320582/article/details/83386730
+进入jupyter python网页设计界面             ①cd C:\Users\23573\AppData\Roaming\Python\Python38\Scripts
+                                        ②输入：ipython notebook
+python输出格式对齐问题                     https://www.cnblogs.com/zhz-8919/p/9767357.html
+pyqt5-matplotlib嵌入用户界面进行绘图       https://blog.csdn.net/qq_40587575/article/details/85171401
+ax.plot画图衍射悬者
+    =============    ===============================
+    character        color
+    =============    ===============================
+    ``'b'``          blue 蓝
+    ``'g'``          green 绿
+    ``'r'``          red 红
+    ``'c'``          cyan 蓝绿
+    ``'m'``          magenta 洋红
+    ``'y'``          yellow 黄
+    ``'k'``          black 黑
+    ``'w'``          white 白
+    =============    ===============================

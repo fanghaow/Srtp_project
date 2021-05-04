@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>891</width>
-    <height>853</height>
+    <width>1031</width>
+    <height>752</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,17 +23,38 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QGroupBox" name="groupBox">
-          <property name="title">
-           <string>GroupBox</string>
+         <widget class="QTabWidget" name="tabWidget_2">
+          <property name="currentIndex">
+           <number>1</number>
           </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="groupBox_2">
-          <property name="title">
-           <string>GroupBox</string>
-          </property>
+          <widget class="QWidget" name="tab_3">
+           <attribute name="title">
+            <string>Static plot</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <item>
+             <widget class="QGroupBox" name="groupBox">
+              <property name="title">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_4">
+           <attribute name="title">
+            <string>Dynamic plot</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_6">
+            <item>
+             <widget class="QGroupBox" name="groupBox_2">
+              <property name="title">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
          </widget>
         </item>
        </layout>
@@ -59,7 +80,7 @@
          <enum>QTabWidget::North</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="tab">
          <attribute name="title">
@@ -675,8 +696,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>891</width>
-     <height>26</height>
+     <width>1031</width>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

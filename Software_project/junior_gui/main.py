@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow
-import Mainwindow_ax
-from Mainwindow_ax import Ui_MainWindow
+import Mainwindow
+from Mainwindow import Ui_MainWindow
 import xlwt
 from datetime import datetime
 import numpy as np
@@ -18,7 +18,7 @@ matplotlib.use('Qt5Agg')
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5.QtCore import QTimer, pyqtSlot, QThread
 
-####################### 头代码 #######################
+####################### Head code #######################
 from matplotlib import pyplot as plt
 import numpy as np
 from PyQt5 import QtCore, QtWidgets
@@ -153,6 +153,8 @@ class AppWindow(QMainWindow, Ui_MainWindow):
         self._delay_t = []
         self._Static_on = 0
         self._update_on = 0
+        # my configuration
+        self.line_color = 'b'
 
     @pyqtSlot()
     def on_Static_plot_clicked(self):
@@ -247,7 +249,7 @@ class AppWindow(QMainWindow, Ui_MainWindow):
         ax.set_ylabel("强度")  # 如若需要散点简单平滑曲线连接图，只要将scatter改成plot即可 plt.plot(x, y)
 
         max_i = y.index(max(y)); min_i = y.index(min(y))    # 获取y[i]最大、最小值对应的i
-        ax.plot(x, y, color='b', linewidth=0.8, linestyle='-', label='光谱发生相关曲线')
+        ax.plot(x, y, color=self.line_color, linewidth=0.8, linestyle='-', label='光谱发生相关曲线')
         ax.axvline(x=x[max_i], ls="-.", c="red", linewidth=1)  # 添加垂直直线
         ax.axhline(y=max(y), ls="-.", c="red", linewidth=1, label='最大峰峰值')  # 添加垂直直线
         ax.axvline(x=x[min_i], ls="-.", c="green", linewidth=1)  # 添加垂直直线
@@ -331,7 +333,7 @@ def openfile(): # 打开文件
                 data = f.read()
                 ui.textEdit.setText(data)
         except:
-            ui.textEdit.setText("打开文件失败，可能是文件内型错误")
+            ui.textEdit.setText("打开文件失败，可能是文件类型错误")
 
 def savefile(): # 保存excel文件
     fname = QFileDialog.getSaveFileName(QMainWindow(), "文件保存", "./", ("Excel Files (*.xls)"))
@@ -370,6 +372,11 @@ modified versions may be distributed without limitation.
 This is modified from the embedding in qt4 example to show the difference
 between qt4 and qt5"""
                                     )
+def load_data():
+    pass
+
+def select1():
+    pass
 
 
 
@@ -386,6 +393,7 @@ if __name__ == '__main__':
     ui.actionAbout.triggered.connect(about)
     ui.actionOpen.triggered.connect(openfile)
     ui.actionSave_Data.triggered.connect(savefile)
+    ui.checkVisible_1.clicked.connect(select1)
     # ui.pushButton.clicked.connect(Myplot.change_sys)
     # ui.pushButton_2.clicked.connect(Myplot.GIF)
     # ui.pushButton_2.clicked.connect(Myfigure.drawing)
