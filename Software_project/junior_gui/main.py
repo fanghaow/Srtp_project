@@ -86,11 +86,11 @@ class dynamic_fig(Myplot):
         self.axes.set_xlabel("delay(s)")
         self.axes.set_ylabel("counts")
         # set a suprise
-        img = cv2.imread('smile.jpg')
-        b, r = img[:, :, 0], img[:, :, 2]
-        img[:, :, 0], img[:, :, 2] = r, b
-        self.axes.imshow(img)
-        self.axes.set_title('不会真的有人觉得我会更新软件吧')
+        # img = cv2.imread('smile.jpg')
+        # b, r = img[:, :, 0], img[:, :, 2]
+        # img[:, :, 0], img[:, :, 2] = r, b
+        # self.axes.imshow(img)
+        # self.axes.set_title('不会真的有人觉得我会更新软件吧')
 
 #############################################
 
@@ -304,8 +304,9 @@ def load_data(formula):
         wd = web_data()
         text = wd.web_str()
         wd.json_down()
-        wavelength, strength = wd.proceed_json()
-        strength[0] = -1 # for '-infinity' is not supported by my axis setting
+        data_mat = wd.proceed_json()
+        wavelength = [i for i in range(1, 256)]
+        strength = data_mat[1, :]
     elif formula == 'arduino2py':
         # Formula3 : arduino2py
         ser = serial.Serial('COM7', baudrate=9600, bytesize=8, parity='N', stopbits=1,
@@ -346,7 +347,7 @@ def load_data(formula):
 def color_change1():
     print('I am here!!!')
     color_dict = {'Black':'k', 'Gray':'y', 'Red':'r', 'Green':'g', 'Blue':'b', 'White':'w'}
-    print('I change line color to :' ,color_dict[win.comboColor_1.currentText()])
+    print('I change line color to :', color_dict[win.comboColor_1.currentText()])
     config.line_color = color_dict[win.comboColor_1.currentText()]
     win.drawing()
     pass
@@ -357,16 +358,23 @@ def line_width1():
     win.drawing()
     pass
 
-def visiable1():
+def color_change2():
+
+    pass
+
+def visiable1(): # chioce : 1、2、3
+    # choice_dict = {1:win.checkVisible_1.isChecked(), 2:win.checkVisible_2.isChecked(), 3:win.checkVisible_3.isChecked()}
+    # ischecked = choice_dict[choice]
     ischecked = win.checkVisible_1.isChecked()
     if ischecked == True:
         win.drawing()
     elif ischecked == False:
         fig, ax = win.fig1, win.fig1.axes
         ax.cla()
-        y = list(range(100))
-        ax.plot(y)
-        fig.draw()
+        # y = list(range(100))
+        # ax.plot(y)
+        # fig.draw()
+        print('check :', ischecked)
     pass
 
 class MyConfiguration():
@@ -388,7 +396,9 @@ if __name__ == '__main__':
     win.actionAbout.triggered.connect(about)
     win.actionOpen.triggered.connect(openfile)
     win.actionSave_Data.triggered.connect(savefile)
-    win.checkVisible_1.clicked.connect(visiable1)
+    # win.checkVisible_1.clicked.connect(visiable1()) # hide for a while
+    # win.checkVisible_2.clicked.connect(visiable(2))
+    # win.checkVisible_3.clicked.connect(visiable(3))
     win.comboColor_1.currentTextChanged['QString'].connect(color_change1)
     win.horizontalSlider_1.valueChanged['int'].connect(line_width1)
     # ui.pushButton.clicked.connect(Myplot.change_sys)

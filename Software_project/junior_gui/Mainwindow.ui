@@ -25,7 +25,7 @@
         <item>
          <widget class="QTabWidget" name="tabWidget_2">
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="tab_3">
            <attribute name="title">
@@ -441,11 +441,14 @@
             </item>
             <item row="2" column="1">
              <widget class="QCheckBox" name="checkVisible_1">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
               <property name="text">
                <string>Visible1</string>
               </property>
               <property name="checked">
-               <bool>true</bool>
+               <bool>false</bool>
               </property>
              </widget>
             </item>
@@ -535,7 +538,7 @@
                <string>Visible2</string>
               </property>
               <property name="checked">
-               <bool>true</bool>
+               <bool>false</bool>
               </property>
              </widget>
             </item>
@@ -625,7 +628,7 @@
                <string>Visible3</string>
               </property>
               <property name="checked">
-               <bool>true</bool>
+               <bool>false</bool>
               </property>
              </widget>
             </item>
