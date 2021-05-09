@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1031</width>
-    <height>752</height>
+    <width>1173</width>
+    <height>886</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -469,8 +469,8 @@
             <rect>
              <x>20</x>
              <y>20</y>
-             <width>181</width>
-             <height>172</height>
+             <width>191</width>
+             <height>121</height>
             </rect>
            </property>
            <layout class="QFormLayout" name="formLayout_3">
@@ -636,13 +636,13 @@
           <property name="geometry">
            <rect>
             <x>80</x>
-            <y>490</y>
+            <y>520</y>
             <width>81</width>
             <height>31</height>
            </rect>
           </property>
           <property name="text">
-           <string>track</string>
+           <string>bomb</string>
           </property>
          </widget>
         </widget>
@@ -696,8 +696,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1031</width>
-     <height>23</height>
+     <width>1173</width>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
