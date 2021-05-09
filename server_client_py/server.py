@@ -1,15 +1,16 @@
 import socket
 import threading
+import time
 # Address
-HOST = '0.0.0.0' # '10.185.122.22' # client address
-PORT = 9050
-print('Host:', HOST, 'Port :',PORT)
+HOST = '' # server address, bind self
+PORT = 9999
+print('Host:', HOST, 'Port :', PORT)
 # Configure socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((HOST, PORT))
 print('bind ok')
 
-s.listen(5)
+s.listen(3) # Max number of clients
 print('Waiting for connection...')
 
 def main():
@@ -27,10 +28,11 @@ def tcplink(sock, addr):
     sock.send(b'Welcome!')
     while True:
         data = sock.recv(1024)
-        time.sleep(1)
+        time.sleep(0.5)
+        print('Receive data is:', data.decode('utf-8'))
         if not data or data.decode('utf-8') == 'exit':
             break
-        sock.send(('Hello, %s!' % data.decode('utf-8')).encode('utf-8'))
+        sock.send(('Hello! ' + addr[0] + ' : ' + str(addr[1])).encode('utf-8'))
     sock.close()
     print('Connection from %s:%s closed.' % addr)
 

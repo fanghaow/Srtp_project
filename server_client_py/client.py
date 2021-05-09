@@ -1,9 +1,10 @@
 import socket
 import time
 # Address
-HOST = '1.15.140.205' # server address
-PORT = 80
-request = 'Can you hear me?'
+HOST = '10.185.10.3'  # server address
+PORT = 9999 
+print('Host:', HOST, 'Port :', PORT)
+request = 'This is fanghao_wdewindow client'
 # configure socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
@@ -18,7 +19,7 @@ while(True):
     # if s.recv(1024) != None:
     #     print('i get the info')
     #     break
-reply  = s.recv(1024)
-print ('reply is: ',reply)
+    reply = s.recv(1024)
+    print('reply is: ', reply.decode())
 # close connection
 s.close()
