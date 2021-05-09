@@ -38,9 +38,9 @@ class Web_data(): # Get web data from json file
         # load data from json data
         time_num = len(l_data_dict)
         wavelength = 256
-        l_data_mat = np.zeros((time_num, wavelength))
+        l_data_mat = []
         for t in range(time_num):
-            l_data_mat[t, :] = l_data_dict['Number ' + str(t+1) + ' times']
+            l_data_mat.append(list(l_data_dict['Number ' + str(t+1) + ' times']))
 
         # plt.plot(l_data_mat[1, :]) 
         # plt.title('Strength -- Wavelength')
@@ -56,13 +56,16 @@ class Web_data(): # Get web data from json file
         self.download_json = filename
 
 def main():
-    wd = web_data()
+    wd = Web_data()
     # grep web html
     text = wd.web_str() 
     # download json file
     wd.json_down()
     # plot data derived from web
-    wd.proceed_json()
+    mat_data = wd.proceed_json()
+    print(mat_data)
+    print(type(mat_data))
+    print(type(mat_data[1]))
 
 if __name__ == '__main__':
     main()

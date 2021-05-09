@@ -147,7 +147,7 @@ class AppWindow(QMainWindow, Ui_MainWindow):
 
     def drawing(self):
         self.fig1.axes.cla()
-        x, y = load_data('excel')
+        x, y = load_data('json')
 
         # matplotlib set font
         global system
@@ -199,13 +199,13 @@ class AppWindow(QMainWindow, Ui_MainWindow):
 
     def update_fig(self):
         self._t += 1
-        print(self._t)
         self._delay_t.append(self._t)
-        print(self._delay_t)
-        # new_counts=random.randint(100,900)
-        new_counts = 2 * self._t - self._t * np.cos(self._t / 2 / np.pi * 1000)
+        # new_counts = 2 * self._t - self._t * np.cos(self._t / 2 / np.pi * 1000)
+        channel = 50
+        new_counts = config.mat_data[self._t - 1][channel]
         self._counts.append(new_counts)
-        print(self._counts)
+
+        print('Wavelength '+str(channel)+':', self._counts)
         self.fig2.axes.cla()
         self.fig2.axes.plot(self._delay_t, self._counts, '-ob')
         self.fig2.axes.set_title("signals", fontsize=18, color='c')
@@ -301,12 +301,13 @@ def load_data(formula):
         strength = [sheet.cell_value(0,i) for i in range(256)]
     elif formula == 'json':
         # Formula2 : json
-        wd = web_data()
+        wd = Web_data()
         text = wd.web_str()
         wd.json_down()
         data_mat = wd.proceed_json()
-        wavelength = [i for i in range(1, 256)]
-        strength = data_mat[1, :]
+        config.updatedata_callback(data_mat)
+        wavelength = [i for i in range(1, 257)]
+        strength = data_mat[1][:]
     elif formula == 'arduino2py':
         # Formula3 : arduino2py
         ser = serial.Serial('COM7', baudrate=9600, bytesize=8, parity='N', stopbits=1,
@@ -381,6 +382,10 @@ class MyConfiguration():
     def __init__(self):
         self.line_color = 'b'
         self.line_width = 0.8
+        self.mat_data = np.zeros((100, 256))
+
+    def updatedata_callback(self, data_mat):
+        self.mat_data = data_mat
 
 if __name__ == '__main__':
     config = MyConfiguration()
