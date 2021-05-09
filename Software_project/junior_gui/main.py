@@ -11,7 +11,7 @@ from PyQt5.QtCore import QTimer, pyqtSlot, QThread
 
 ####################### Head code #######################
 # import my web data module
-from Web_project.web_grep_test import web_data
+from Web_project.grepper import Web_data
 from Mainwindow import Ui_MainWindow
 import serial
 import xlrd

@@ -2,11 +2,13 @@
 import requests
 import matplotlib.pyplot as plt
 import json
+import numpy as np
 
-class web_data(): # Get web data from json file 
+class Web_data(): # Get web data from json file 
     def __init__(self, url = 'http://1.15.140.205/'): # srtp server created by wxf
         self.url = url
-        self.download_address = 'http://1.15.140.205/array.json'
+        self.download_address = 'http://1.15.140.205/matrix.json'
+        self.download_json = "matrix_down.json"
     def web_str(self): # To get web html string
         try:
             print('Start greping web ......')
@@ -22,32 +24,36 @@ class web_data(): # Get web data from json file
 
     def json_down(self): # Download json file from server and make a transfer
         f = requests.get(self.download_address)
-        with open("data_down.json","wb") as jsonfile:
+        filename = self.download_address.split('/')
+        filename = filename[-1]
+        self.json_callback(filename)
+        with open(self.download_json, "wb") as jsonfile:
             jsonfile.write(f.content)
         print('Save json file successfully')
 
     def proceed_json(self): # Proceed local/web json file 
-        json_data = open('data_down.json', 'r', encoding='utf-8') # 'array.json' for uploading
-        py_list_down = json.load(json_data)
+        json_data = open(self.download_json, 'r', encoding='utf-8') 
+        l_data_dict = json.load(json_data)
         json_data.close()
-        # print(py_list_down)
-        wave_length_down = []
-        fruit_data_down = []
-        for item in py_list_down:
-            for key, value in item.items():
-                wave_length_down.append(key)
-                fruit_data_down.append(value)
+        # load data from json data
+        time_num = len(l_data_dict)
+        wavelength = 256
+        l_data_mat = np.zeros((time_num, wavelength))
+        for t in range(time_num):
+            l_data_mat[t, :] = l_data_dict['Number ' + str(t+1) + ' times']
 
-        # plot data that comes from web server
-        # plt.scatter(wave_length_down, fruit_data_down)
+        # plt.plot(l_data_mat[1, :]) 
         # plt.title('Strength -- Wavelength')
         # plt.xlabel('Wavelength')
         # plt.ylabel('Strength')
         # plt.show()
-        return wave_length_down, fruit_data_down
-
+        return l_data_mat
+        
     def caculation(self): # our math model to analyze data
         pass
+
+    def json_callback(self, filename):
+        self.download_json = filename
 
 def main():
     wd = web_data()
