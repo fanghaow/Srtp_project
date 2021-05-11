@@ -125,7 +125,8 @@ class AppWindow(QMainWindow, Ui_MainWindow):
     @pyqtSlot()
     def on_Static_plot_clicked(self):
         # self.plot_cos()
-        self.drawing()
+        self.fig1.axes.cla()
+        self.drawing() # (erase=True)
         self._Static_on = 1
         # self.Start_plot.setEnabled(False)
 
@@ -136,7 +137,7 @@ class AppWindow(QMainWindow, Ui_MainWindow):
         # print('nc=%d\n' %self.nc)
         global nc
         nc += 1
-        self.fig1.axes.cla()
+        self.fig1.axes.cla() # init
         self.t = np.arange(0, 15, 0.1)
         self.y = 2 * nc * self.t - self.t * np.cos(self.t / 2 / np.pi * 1000)
         self.fig1.axes.plot(self.t, self.y)
@@ -145,8 +146,10 @@ class AppWindow(QMainWindow, Ui_MainWindow):
         self.fig1.axes.set_ylabel("counts", fontsize=18, color='c')
         self.fig1.draw()
 
-    def drawing(self):
-        self.fig1.axes.cla()
+    def drawing(self, erase=False):
+        if erase == True:
+            self.fig1.axes.cla()
+        # print(self.fig1.axes.lines)
         x, y = load_data('json')
 
         # matplotlib set font
@@ -189,7 +192,7 @@ class AppWindow(QMainWindow, Ui_MainWindow):
 
     @pyqtSlot()
     def on_dynamic_plot_clicked(self):
-        print('start dynamic ploting')
+        print('Start dynamic ploting')
         # self.Static_plot.setEnabled(False)
         self.dynamic_plot.setEnabled(False)
         # start update figure every 1s; flag "update_on" : 1 is on and 0 is Off
@@ -346,21 +349,27 @@ def load_data(formula):
     return wavelength, strength
 
 def color_change1():
-    print('I am here!!!')
     color_dict = {'Black':'k', 'Gray':'y', 'Red':'r', 'Green':'g', 'Blue':'b', 'White':'w'}
     print('I change line color to :', color_dict[win.comboColor_1.currentText()])
     config.line_color = color_dict[win.comboColor_1.currentText()]
-    win.drawing()
+    for index, line in enumerate(win.fig1.axes.get_lines()):
+        print('Lines label :', line.get_label())
+        if line.get_label() == '光谱发生相关曲线':
+            line.set_color(config.line_color)
+            win.fig1.draw()
     pass
 
 def line_width1():
     width = win.horizontalSlider_1.value() / 100 * 0.8 + 0.8
     config.line_width = width
-    win.drawing()
+    for index, line in enumerate(win.fig1.axes.get_lines()):
+        print('Lines label :', line.get_label())
+        if line.get_label() == '光谱发生相关曲线':
+            line.set_linewidth(config.line_width)
+            win.fig1.draw()
     pass
 
 def color_change2():
-
     pass
 
 def visiable1(): # chioce : 1、2、3
