@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <script type="text/javascript">
+            //第一步：获得XMLHttpRequest对象
+            var ajax = new XMLHttpRequest();
+
+            //第二步：设置状态监听函数
+            ajax.onreadystatechange = function(){
+                //console.log(ajax.readyState);
+                //console.log(ajax.status);
+                //第五步，在监听函数中，判断readyState==4 && status == 200表示请求成功；
+                if (ajax.readyState == 4 && ajax.status == 200) {
+                    //第六步，使用ajax.responseText、ajax.responseXML接收响应数据，并使用原生js操作DOM进行显示
+                    //console.log(ajax.responseText);
+                    //console.log(ajax.responseXML);//返回不是XMl,显示null
+                    console.log(JSON.parse(ajax.responseText));
+                    //console.log(eval("("+ajax.responseText+")"));
+
+
+                }
+            }
+
+            //第三步：open一个请求
+            ajax.open("GET","h5.json",true); //true表示异步请求。false表示同步请求
+
+            //第四步：send一个请求。可以发送对象和字符串，不需要传递数据发送null;
+            ajax.send(null);
+
+            var str = "alert('111')";
+            eval(str);
+            eval("alert('111')");
+
+            var json1 = "{'name':'zhangsan'}";
+            console.log(eval("("+json1+")"));
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

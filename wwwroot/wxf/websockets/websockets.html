@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>欢迎</title>
+</head>
+
+<body>
+    <h1>这里什么都没有</h1>
+
+    <h2>Download Area</h2>
+    <a href="ttt123.txt" download="test.txt">下载txt文件</a> 
+    <a href="array.json" download="test-array.txt">下载json文件</a> 
+    
+    <h2>Upload Area</h2>
+    <form id="form1" enctype="multipart/form-data" method="post" action="upload.php">
+        <div class="row">
+            <label for="fileToUpload">Select a File to Upload</label>
+            <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();"/>
+         </div>
+        <div id="fileName"></div>
+        <div id="fileSize"></div>
+        <div id="fileType"></div>
+        <div class="row">
+            <input type="button" onclick="uploadFile()" value="Upload" />
+         </div>
+        <div id="progressNumber"></div>
+     </form>
+
+    <h2>WebSockets</h2>
+    <div id="sse">
+      <script src="websockets.js"></script>
+      <!--<a href="javascript:WebSocketTest()">运行 WebSocket</a>-->
+      </div>
+
+ </body>
+
+ </html>
