@@ -1,4 +1,3 @@
 # Srtp Project
 ## Cloud-Based Micro Spectrometer for Fruit Sugar Detection
-Cdj has came!
-wfh leaves 232 
+We decide to choose kiwi berry to be our fruit detect object!!! At the same time we abandon mango and cherry...
