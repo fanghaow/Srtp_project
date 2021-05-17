@@ -15,7 +15,8 @@ while(True):
     s.sendall(request.encode())
     print('sent data :', request)
     time.sleep(0.5)
-    reply  = s.recv(1024)
+    reply = s.recv(1024)
     print('reply is: ', reply.decode())
+    
 # close connection
 s.close()
