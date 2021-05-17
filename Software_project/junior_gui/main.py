@@ -146,20 +146,19 @@ class AppWindow(QMainWindow, Ui_MainWindow):
         self.fig1.axes.set_ylabel("counts", fontsize=18, color='c')
         self.fig1.draw()
 
-    def drawing(self, erase=False):
+    def drawing(self, erase=False, line_label=1):
         if erase == True:
             self.fig1.axes.cla()
-        # print(self.fig1.axes.lines)
-        x, y = load_data('json')
+        x, y = load_data('json', line_label)
 
-        # matplotlib set font
+        # Matplotlib set font
         global system
         if system == 0:
             plt.rcParams['font.family']='SimHei' # windows chinese font
             plt.rcParams['font.sans-serif']=['SimHei']
             plt.rcParams['axes.unicode_minus']=False
         else:
-            plt.rcParams['font.sans-serif']=['Arial Unicode MS']  # mac chinese font
+            plt.rcParams['font.sans-serif']=['Arial Unicode MS'] # mac chinese font
             plt.rcParams['axes.unicode_minus']=False
 
         # set title
@@ -169,11 +168,11 @@ class AppWindow(QMainWindow, Ui_MainWindow):
         ax.set_ylabel("Strength")
 
         max_i = y.index(max(y)); min_i = y.index(min(y))
-        ax.plot(x, y, color=config.line_color, linewidth=config.line_width, linestyle='-', label='光谱发生相关曲线')
-        ax.axvline(x=x[max_i], ls="-.", c="red", linewidth=1)
-        ax.axhline(y=max(y), ls="-.", c="red", linewidth=1, label='最大峰峰值')  # add horizontal straight line
-        ax.axvline(x=x[min_i], ls="-.", c="green", linewidth=1)
-        ax.axhline(y=min(y), ls="-.", c="green", linewidth=1, label='最大峰峰值')  # add vertical straight line
+        ax.plot(x, y, color=config.line_color, linewidth=config.line_width, linestyle='-', label='Spectral_Curve'+str(line_label))
+        ax.axvline(x=x[max_i], ls="-.", c="red", linewidth=1, label='Max_index'+str(line_label))
+        ax.axhline(y=max(y), ls="-.", c="red", linewidth=1, label='Max_peak'+str(line_label))  # add horizontal straight line
+        ax.axvline(x=x[min_i], ls="-.", c="green", linewidth=1, label='Min_index'+str(line_label))
+        ax.axhline(y=min(y), ls="-.", c="green", linewidth=1, label='Min_peak'+str(line_label))  # add vertical straight line
         ax.legend(bbox_to_anchor=(0, 1), loc='lower left',
                   framealpha=0.5)
 
@@ -294,7 +293,7 @@ This is modified from the embedding in qt4 example to show the difference
 between qt4 and qt5"""
                                     )
 
-def load_data(formula):
+def load_data(formula, line_label):
     if formula == 'excel':
         # Formula1 : excel
         A0 = 590.8939192; B1 = 2.303196492; B2 = -0.0004665871929; B3 = -0.000007877923077; B4 = 3.020550598E-08; B5 = -4.876599743E-11
@@ -310,7 +309,7 @@ def load_data(formula):
         data_mat = wd.proceed_json()
         config.updatedata_callback(data_mat)
         wavelength = [i for i in range(1, 257)]
-        strength = data_mat[1][:]
+        strength = data_mat[line_label][:]
     elif formula == 'arduino2py':
         # Formula3 : arduino2py
         ser = serial.Serial('COM7', baudrate=9600, bytesize=8, parity='N', stopbits=1,
@@ -354,9 +353,11 @@ def color_change1():
     config.line_color = color_dict[win.comboColor_1.currentText()]
     for index, line in enumerate(win.fig1.axes.get_lines()):
         print('Lines label :', line.get_label())
-        if line.get_label() == '光谱发生相关曲线':
+        if line.get_label() == 'Spectral_Curve'+str(1):
             line.set_color(config.line_color)
             win.fig1.draw()
+    pass
+def color_change2():
     pass
 
 def line_width1():
@@ -364,27 +365,34 @@ def line_width1():
     config.line_width = width
     for index, line in enumerate(win.fig1.axes.get_lines()):
         print('Lines label :', line.get_label())
-        if line.get_label() == '光谱发生相关曲线':
+        if line.get_label() == 'Spectral_Curve'+str(1):
             line.set_linewidth(config.line_width)
             win.fig1.draw()
     pass
 
-def color_change2():
-    pass
-
-def visiable1(): # chioce : 1、2、3
-    # choice_dict = {1:win.checkVisible_1.isChecked(), 2:win.checkVisible_2.isChecked(), 3:win.checkVisible_3.isChecked()}
-    # ischecked = choice_dict[choice]
+def visiable1():
     ischecked = win.checkVisible_1.isChecked()
     if ischecked == True:
         win.drawing()
     elif ischecked == False:
         fig, ax = win.fig1, win.fig1.axes
+        print('Before :', ax.get_lines())
         ax.cla()
-        # y = list(range(100))
-        # ax.plot(y)
-        # fig.draw()
-        print('check :', ischecked)
+        fig.draw()
+        print('After :', ax.get_lines())
+    pass
+
+def visiable2():
+    ischecked = win.checkVisible_2.isChecked()
+    if ischecked == True:
+        win.drawing(line_label=2)
+    elif ischecked == False:
+        fig, ax = win.fig1, win.fig1.axes
+        for index, line in enumerate(win.fig1.axes.get_lines()):
+            print('Lines label :', line.get_label())
+            if line.get_label() in [config.Line_name[i]+str(2) for i in config.Line_name]:
+                win.fig1.axes.lines.remove(line)
+        fig.draw()
     pass
 
 class MyConfiguration():
@@ -392,6 +400,8 @@ class MyConfiguration():
         self.line_color = 'b'
         self.line_width = 0.8
         self.mat_data = np.zeros((100, 256))
+        self.Line_name = {'title':'Spectral_Curve', 'min_x':'Min_index',\
+                          'min_y':'Min_peak', 'max_x':'Max_index', 'max_y':'Max_peak'}
 
     def updatedata_callback(self, data_mat):
         self.mat_data = data_mat
@@ -410,9 +420,9 @@ if __name__ == '__main__':
     win.actionAbout.triggered.connect(about)
     win.actionOpen.triggered.connect(openfile)
     win.actionSave_Data.triggered.connect(savefile)
-    # win.checkVisible_1.clicked.connect(visiable1()) # hide for a while
-    # win.checkVisible_2.clicked.connect(visiable(2))
-    # win.checkVisible_3.clicked.connect(visiable(3))
+    win.checkVisible_1.clicked.connect(visiable1) # Don't add () after func, or you will get a Nonetype Error!!!
+    win.checkVisible_2.clicked.connect(visiable2)
+    # win.checkVisible_3.clicked.connect(visiable3)
     win.comboColor_1.currentTextChanged['QString'].connect(color_change1)
     win.horizontalSlider_1.valueChanged['int'].connect(line_width1)
     # ui.pushButton.clicked.connect(Myplot.change_sys)

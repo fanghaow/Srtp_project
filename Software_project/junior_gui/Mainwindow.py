@@ -196,7 +196,7 @@ class Ui_MainWindow(object):
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.comboColor_1)
         self.checkVisible_1 = QtWidgets.QCheckBox(self.formLayoutWidget)
         self.checkVisible_1.setEnabled(True)
-        self.checkVisible_1.setChecked(False)
+        self.checkVisible_1.setChecked(True)
         self.checkVisible_1.setObjectName("checkVisible_1")
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.checkVisible_1)
         self.groupLine_2 = QtWidgets.QGroupBox(self.tab_2)
