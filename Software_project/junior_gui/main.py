@@ -12,6 +12,7 @@ from PyQt5.QtCore import QTimer, pyqtSlot, QThread
 ####################### Head code #######################
 # import my web data module
 from Web_project.grepper import Web_data
+from json_tf import Json_Tf
 from Mainwindow import Ui_MainWindow
 import serial
 import xlrd
@@ -22,6 +23,7 @@ import matplotlib.pyplot as plt
 from PyQt5 import QtWidgets
 import cv2
 import time
+import json
 # global variables
 system = 0
 
@@ -150,8 +152,11 @@ class AppWindow(QMainWindow, Ui_MainWindow):
     def drawing(self, erase=False, line_label=1):
         if erase == True:
             self.fig1.axes.cla()
-        x, y = load_data('arduino2py', line_label)
-
+        try:
+            x, y = load_data('arduino2py', line_label)
+        except:
+            print('No data received!!!')
+            return
         # Matplotlib set font
         global system
         if system == 0:
@@ -295,9 +300,9 @@ between qt4 and qt5"""
                                     )
 
 def load_data(formula, line_label):
+    A0 = 590.8939192; B1 = 2.303196492; B2 = -0.0004665871929; B3 = -0.000007877923077; B4 = 3.020550598E-08; B5 = -4.876599743E-11
+    wavelength = [(A0 + B1 * i + B2 * i ** 2 + B3 * i ** 3 + B4 * i ** 4 + B5 * i ** 5) for i in range(256)]
     if formula == 'excel':
-        A0 = 590.8939192; B1 = 2.303196492; B2 = -0.0004665871929; B3 = -0.000007877923077; B4 = 3.020550598E-08; B5 = -4.876599743E-11
-        wavelength = [(A0 + B1 * i + B2 * i ** 2 + B3 * i ** 3 + B4 * i ** 4 + B5 * i ** 5) for i in range(256)]
         excel = xlrd.open_workbook(r"光谱仪正确的鲸鱼数据.xls")
         sheet = excel.sheet_by_name("Sheet1")
         strength = [sheet.cell_value(0,i) for i in range(256)]
@@ -307,49 +312,47 @@ def load_data(formula, line_label):
         wd.json_down()
         data_mat = wd.proceed_json()
         config.updatedata_callback(data_mat)
-        wavelength = [i for i in range(1, 257)]
+        # wavelength = [i for i in range(1, 257)]
         strength = data_mat[line_label][:]
     elif formula == 'arduino2py':
         ser = serial.Serial('COM7', baudrate=115200, bytesize=8, parity='N', stopbits=1,
                             timeout=0.01)  # open a port, return a msg per second, set own serial
-        demo1, demo2 = b'G', b'1'  # tf 0 and 1 into bytes(ASCII)
         try:
-            for i in range(1):
-                # c = input('Please enter command: ')
-                c = 'G'
-                c = ord(c)  # tf c to UTF-8 universal number
-                print('I sent ' + str(c) + ' to Arduino')
-                if c == 71:
-                    ser.write(demo1)
-                if c == 49:
-                    ser.write(demo2)
-                order = 0
-                data = []
-                # start receive data from arduino
-                while True:
-                    a = ser.readline()
-                    msg = a.decode('utf-8')
-                    print('No.' + str(order+1) + ' loop')
-                    print('Received :', msg)
-                    if msg != '':
-                        print('I get effective msg: ', msg)
-                        print(str(a, encoding='gbk'))
-                        time.sleep(0.5)
-                        data.append(msg)
-                        break
-                    order += 1
-                    if order >= 10000:
-                        print('Running %d times，there is no feedback, plz try later!!' % order)
-                        break
-                print('Data :', data)
-                yy = data[0].split(',') # split my str into list data
-                strength = [int(i) for i in yy if i.isdigit()] # save int data into y
-                strength.append(sum(yy) / 255)
-                print('Get data!!! From No.%d reading:' % order)
-                print(len(yy))
+            print('Sleeping!!! zzz')
+            for i in range(20):
+                print('.')
+                time.sleep(0.1)
+            order = 0
+            data = []
+            # start receive data from arduino
+            while True:
+                ser.write(b'G')
+                a = ser.readline()
+                msg = a.decode('gbk')
+                print('No.' + str(order+1) + ' loop')
+                print('Received :', msg)
+                if msg != '' and msg != '\r\n':
+                    print('I get effective msg: ', msg)
+                    print(str(a, encoding='gbk'))
+                    # time.sleep(0.5)
+                    data.append(msg)
+                    # break
+                order += 1
+                if order >= 500:
+                    print('Running %d times，there is no feedback, plz try later!!' % order)
+                    break
+            print('Data :', data)
+            yy = data[-1].split(',') # split my str into list data
+            strength = [int(i) for i in yy if i.isdigit()] # save int data into y
+            print('Length of strength :', len(strength))
+            # strength.append(sum(yy) / 255)
+            print('Get data!!! From No.%d reading:' % order)
+            # jt.json_1D()
+            jt.json_2D(strength)
         except Exception as e:
             print('Come across error :', e)
             ser.close()
+            return
     print('Wavelength :', wavelength)
     print("strength :", strength)
     return wavelength, strength
@@ -415,6 +418,7 @@ class MyConfiguration():
 
 if __name__ == '__main__':
     config = MyConfiguration()
+    jt = Json_Tf()
     app = QApplication(sys.argv)
     MainWindow = QMainWindow()
     ui = Ui_MainWindow()
