@@ -4,11 +4,16 @@ import matplotlib.pyplot as plt
 class Json_Tf():
     def __init__(self):
         self.filename = 'Grape_data.json'
-        self.clear_file
-        pass
+        self.clear_file()
 
     def clear_file(self):
-        pass
+        json_data = open(self.filename, 'w')
+        fate_data = [0 for i in range(256)]
+        fate_dic = {}
+        fate_dic['Initial setting'] = fate_data
+        json.dump(fate_dic, json_data, ensure_ascii=False, indent=4)
+        json_data.close()
+        print('Clear data successfully!!!')
 
     def json_1D(self, fruit_data_up):
         wave_length_up = [i for i in range(256)]
@@ -49,8 +54,8 @@ class Json_Tf():
 
 def main():
     jt = Json_Tf()
-    strength = [i for i in range(256)]
-    jt.json_2D(strength)
+    # strength = [i for i in range(256)]
+    # jt.json_2D(strength)
 
 if __name__ == '__main__':
     main()
