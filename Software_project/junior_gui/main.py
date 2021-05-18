@@ -318,15 +318,15 @@ def load_data(formula, line_label):
         ser = serial.Serial('COM7', baudrate=115200, bytesize=8, parity='N', stopbits=1,
                             timeout=0.01)  # open a port, return a msg per second, set own serial
         try:
-            print('Sleeping!!! zzz')
-            for i in range(20):
+            print('Sleeping!!!')
+            for i in range(30):
                 print('.')
                 time.sleep(0.1)
             order = 0
             data = []
+            ser.write(b'G')
             # start receive data from arduino
             while True:
-                ser.write(b'G')
                 a = ser.readline()
                 msg = a.decode('gbk')
                 print('No.' + str(order+1) + ' loop')
@@ -342,8 +342,8 @@ def load_data(formula, line_label):
                     print('Running %d times，there is no feedback, plz try later!!' % order)
                     break
             print('Data :', data)
-            yy = data[-1].split(',') # split my str into list data
-            strength = [int(i) for i in yy if i.isdigit()] # save int data into y
+            yy = data[-1].split(',')
+            strength = [int(i) for i in yy if i.isdigit()]
             print('Length of strength :', len(strength))
             # strength.append(sum(yy) / 255)
             print('Get data!!! From No.%d reading:' % order)
@@ -416,9 +416,19 @@ class MyConfiguration():
     def updatedata_callback(self, data_mat):
         self.mat_data = data_mat
 
+def filename():
+    f = open('my_variables.txt', 'r')
+    order = int(f.read())
+    f.close()
+    f = open('my_variables.txt', 'w')
+    f.write(str(order+1))
+    f.close()
+    return order
+
 if __name__ == '__main__':
     config = MyConfiguration()
-    jt = Json_Tf()
+    ppj = filename()
+    jt = Json_Tf(filename='Data/Grape_data.json'+str(ppj))
     app = QApplication(sys.argv)
     MainWindow = QMainWindow()
     ui = Ui_MainWindow()
