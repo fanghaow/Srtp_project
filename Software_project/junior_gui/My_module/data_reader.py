@@ -16,4 +16,5 @@ for i in range(1, 21):
 
         mymatrix = np.mat(list1)  # list2matrix
         print(file_name)
-        print(mymatrix, end='\n\n')
+        print(mymatrix)
+        print('Matrix shape :', mymatrix.shape)
