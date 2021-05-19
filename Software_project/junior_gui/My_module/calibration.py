@@ -23,7 +23,7 @@ class CaliBration():
     def load_txt(self):
         pass
 
-    def pls(self):
+    def PLS(self):
         pass
 
     def predict(self):

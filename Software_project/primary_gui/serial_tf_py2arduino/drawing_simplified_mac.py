@@ -36,7 +36,7 @@ for i in range(256):
 # python_to_arduino
 import serial  # 导入serial库
 
-ser = serial.Serial('COM7', baudrate=9600, bytesize=8, parity='N', stopbits=1,
+ser = serial.Serial('dev/cu.usbmodem141201', baudrate=9600, bytesize=8, parity='N', stopbits=1,
                     timeout=0.01)  # 打开端口，每一秒返回一个消息 ,设置自己的串口
 
 demo1 = b"G"  # 将0转换为ASCII码方便发送

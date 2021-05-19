@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/srtp_project.iml" filepath="$PROJECT_DIR$/.idea/srtp_project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Srtp_project.iml" filepath="$PROJECT_DIR$/.idea/Srtp_project.iml" />
     </modules>
   </component>
 </project>
