@@ -6,13 +6,13 @@ import re
 
 class CaliBration():
     def __init__(self):
-        self.path = 'Software_project/junior_gui/DATA/'
+        self.path = 'Software_project/junior_gui/DATA_0518/'
         # self.load_label()
         # self.load_txt()
         # self.data_tf()
         # self.predict()
 
-    def load_label(self, grape_num=20, path='Software_project/junior_gui/DATA/', filename='Real_grape.xlsx'):
+    def load_label(self, grape_num=20, path='Software_project/junior_gui/DATA_0518/', filename='Real_grape.xlsx'):
         self.grape_num = grape_num
         self.pos_num = 3
         label = np.zeros((self.grape_num, self.pos_num))
@@ -33,7 +33,7 @@ class CaliBration():
         # print('Label shape :', self.label.shape)
         return label
 
-    def load_txt(self, grape_num=20, symbol=',', start=0, path='Software_project/junior_gui/DATA/'):
+    def load_txt(self, grape_num=20, symbol=',', start=0, path='Software_project/junior_gui/DATA_0518/'):
         data_mat = np.zeros((self.grape_num, self.pos_num, 256))
         for i in range(1, grape_num+1):
             for j in range(1, self.pos_num+1):
@@ -126,7 +126,7 @@ class CaliBration():
 
     def predict(self, params):
         print('\nStart predicting!!!\n')
-        # pre_path = 'Software_project/junior_gui/0519DATA/'
+        # pre_path = 'Software_project/junior_gui/DATA_0519/'
         # label_mat = self.load_label(grape_num=36, path=pre_path, filename='realData0519.xlsx')
         # data_mat = self.load_txt(grape_num=36, path=pre_path)
         # data, label = self.data_tf(data_mat, label_mat, needsave=False)
@@ -165,7 +165,7 @@ def main():
     # params = cb.OLS(data, label)
     # cb.predict(params)
 
-    pre_path = 'Software_project/junior_gui/0519DATA/'
+    pre_path = 'Software_project/junior_gui/DATA_0519/'
     label_mat = cb.load_label(grape_num=36, path=pre_path, filename='realData0519.xlsx')
     data_mat = cb.load_txt(grape_num=36, path=pre_path)
     data, label = cb.data_tf(data_mat, label_mat, needsave=False)

@@ -298,7 +298,7 @@ def load_data(formula, line_label):
         # Formula1 : excel
         A0 = 590.8939192; B1 = 2.303196492; B2 = -0.0004665871929; B3 = -0.000007877923077; B4 = 3.020550598E-08; B5 = -4.876599743E-11
         wavelength = [(A0 + B1 * i + B2 * i ** 2 + B3 * i ** 3 + B4 * i ** 4 + B5 * i ** 5) for i in range(256)]
-        excel = xlrd.open_workbook(r"光谱仪正确的鲸鱼数据.xls")
+        excel = xlrd.open_workbook(r"WhaleLike_Data.xls")
         sheet = excel.sheet_by_name("Sheet1")
         strength = [sheet.cell_value(0,i) for i in range(256)]
     elif formula == 'json':
