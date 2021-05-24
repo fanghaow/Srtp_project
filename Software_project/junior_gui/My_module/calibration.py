@@ -78,7 +78,7 @@ class CaliBration():
                 num_format_str='#,##0.00') # ’Times New Roman‘ font
             # style1 = xlwt.easyxf(num_format_str='D-MMM-YY') 
             wb = xlwt.Workbook()
-            ws = wb.add_sheet('Sheet1')
+            ws = wb.add_sheet('Sheet2')
 
             # print(self.data_mat[1, 1, :], '\n', self.data_mat[1, 2, :])
             for i in range(data.shape[0]):
@@ -87,6 +87,7 @@ class CaliBration():
                 ws.write(data.shape[1]+3, i, label[i, 0])
 
             wb.save('Software_project/junior_gui/My_module/Combined_data.xls')
+            print('Save excel successfully!!!')
         return data, label
 
     def PLS(self):
@@ -166,12 +167,12 @@ def main():
     # cb.predict(params)
 
     pre_path = 'Software_project/junior_gui/DATA_0519/'
-    label_mat = cb.load_label(grape_num=36, path=pre_path, filename='realData0519.xlsx')
+    label_mat = cb.load_label(grape_num=36, path=pre_path, filename='Real_grape.xlsx')
     data_mat = cb.load_txt(grape_num=36, path=pre_path)
-    data, label = cb.data_tf(data_mat, label_mat, needsave=False)
+    data, label = cb.data_tf(data_mat, label_mat, needsave=True)
     print('Training data shape :', data.shape, label.shape)
-    params = cb.OLS(data, label)
-    cb.predict(params)
+    # params = cb.OLS(data, label)
+    # cb.predict(params)
 
 if __name__ == '__main__':
     main()
