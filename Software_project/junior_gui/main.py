@@ -149,7 +149,7 @@ class AppWindow(QMainWindow, Ui_MainWindow):
     def drawing(self, erase=False, line_label=1):
         if erase == True:
             self.fig1.axes.cla()
-        x, y = load_data('json', line_label)
+        x, y = load_data('excel', line_label)
 
         # Matplotlib set font
         global system
