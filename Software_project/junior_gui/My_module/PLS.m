@@ -1,7 +1,7 @@
 clear;clc;
 %% Load data
-load('grape_data_0518.mat'); % First_data : (261, 59)
-Data = First_data';
+load('DATA_0518/grape_data_0518.mat'); % First_data : (261, 59)
+Data = grape_0518';
 % data = Data(:, 2:257); 
 % label = Data(:, 258);
 %% Normlize

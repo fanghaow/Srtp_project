@@ -15,12 +15,14 @@ B2 = -0.0004665871929;
 B3 = -0.000007877923077;
 B4 = 3.020550598E-08;
 B5 = -4.876599743E-11;
+wavelength = zeros(256, 1);
 for j = 1:256
     wavelength(j) = A0 + B1 * j + B2 * j ^ 2 + B3 * j ^ 3 + B4 * j ^ 4 + B5 * j ^ 5;
 end
 
 %% Filter
 j = 0;
+eff_data0 = zeros(256+1, col);
 for i = 1:col
     if(i==60 || i==37)
         continue;
@@ -58,9 +60,9 @@ for i = 1:pre_times
     n = size(train_set, 2); % independ variable number
     m = size(train_label, 2); % depend variable number
 
-    % Caculate residuals
-    labelfit = [ones(size(train_set, 1),1) train_set] * BETA;
-    residuals = train_label - labelfit;
+    % Caculate Residuals Example
+%     labelfit = [ones(size(train_set, 1),1) train_set] * BETA;
+%     residuals = train_label - labelfit;
 
     % VIPscore
     W0 = stats.W ./ sqrt(sum(stats.W.^2,1));
