@@ -149,21 +149,21 @@ class AppWindow(QMainWindow, Ui_MainWindow):
     def drawing(self, erase=False, line_label=1):
         if erase == True:
             self.fig1.axes.cla()
-        x, y = load_data('excel', line_label)
+        x, y = load_data('json', line_label)
 
         # Matplotlib set font
         global system
         if system == 0:
-            plt.rcParams['font.family']='SimHei' # windows chinese font
-            plt.rcParams['font.sans-serif']=['SimHei']
-            plt.rcParams['axes.unicode_minus']=False
+            plt.rcParams['font.family'] = 'SimHei' # windows chinese font
+            plt.rcParams['font.sans-serif'] = ['SimHei']
+            plt.rcParams['axes.unicode_minus'] = False
         else:
-            plt.rcParams['font.sans-serif']=['Arial Unicode MS'] # mac chinese font
-            plt.rcParams['axes.unicode_minus']=False
+            plt.rcParams['font.sans-serif'] = ['Arial Unicode MS'] # mac chinese font
+            plt.rcParams['axes.unicode_minus'] = False
 
         # set title
         fig, ax = self.fig1, self.fig1.axes
-        ax.set_title("Wavelength——Strenngth")
+        ax.set_title("Wavelength——Strength")
         ax.set_xlabel("Wavelength")
         ax.set_ylabel("Strength")
 
@@ -245,7 +245,7 @@ class AppWindow(QMainWindow, Ui_MainWindow):
 
 # My Functions
 def openfile():
-    fname = QFileDialog.getOpenFileName(QMainWindow(),'打开文件','/',('Txt files (*.txt)'))  # fname = ('C:/Users/23573/Desktop/树莓派配置.txt', 'All Files (*)')
+    fname = QFileDialog.getOpenFileName(QMainWindow(),'打开文件','/', ("Txt files (*.txt);;Excel files (*.xls/*.xlsx);;Json files (*.json);; Csv file (*.csv)" ) )  # fname = ('C:/Users/23573/Desktop/树莓派配置.txt', 'All Files (*)')
     print(fname)
     if fname[0]:
         try:
@@ -257,7 +257,7 @@ def openfile():
             ui.textEdit.setText("打开文件失败，可能是文件类型错误")
 
 def savefile(): # save excel file
-    fname = QFileDialog.getSaveFileName(QMainWindow(), "文件保存", "./", ("Excel Files (*.xls)"))
+    fname = QFileDialog.getSaveFileName(QMainWindow(), "文件保存", "./", ("Txt files (*.txt);;Excel files (*.xls/*.xlsx);;Json files (*.json);; Csv file (*.csv)"))
     print(fname)
     wavelength = list(range(256))
     data = [float(i) for i in (np.arange(0, 20, 256) + np.random.random((256, 1)))]
@@ -280,17 +280,13 @@ def savefile(): # save excel file
 
 def about():
     QtWidgets.QMessageBox.about(QMainWindow(), "About",
-                                """embedding_in_qt5.py example
-Copyright 2005 Florent Rougon, 2006 Darren Dale, 2015 Jens H Nielsen
-
-This program is a simple example of a Qt5 application embedding matplotlib
-canvases.
-
-It may be used and modified with no restriction; raw copies as well as
-modified versions may be distributed without limitation.
-
-This is modified from the embedding in qt4 example to show the difference
-between qt4 and qt5"""
+                                """软件版本：1.0.1
+        作者：王芳豪、王雪帆、陈丁佳
+        日期：2020.05.01
+        目标：测量水果255分辨率光谱数据，运行模型，得出水果糖度预测结果
+        功能：检测实时光谱波段数据，多光谱曲线对比，自训练模型，云端数据保存与预测
+        支持系统：Windows、Mac、Linux
+"""
                                     )
 
 def load_data(formula, line_label):
@@ -330,16 +326,16 @@ def load_data(formula, line_label):
                 while(data == []): # loop until read data
                     a = ser.readline()
                     if(str(a,encoding='gbk')!='' and str(a,encoding='gbk')!='\r\n'):
-                        data.append(str(a,encoding='gbk'))
+                        data.append(str(a, encoding='gbk'))
                     time += 1
                     if time >= 1000:
                         print('运行%d次，次数过多，未能读到数据' % (time))
                         break
                 yy = data[0].split(',') # split my str into list data
                 strength = [int(i) for i in yy if i.isdigit()] # save int data into y
-                strength.append(sum(y)/255)
-                print('运行第%d次，读取到数据:'%(time),strength)
-                print(len(y))
+                strength.append(sum(strength)/255)
+                print('运行第%d次，读取到数据:'%(time), strength)
+                print(len(strength))
         except Exception as e:
             print(e)
             ser.close()  # close my serial when get a exception
