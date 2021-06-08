@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import xlrd, xlwt
 import time
 import re
+from sklearn.cross_decomposition import PLSCanonical, PLSRegression, CCA
+import csv
 
 class CaliBration():
     def __init__(self):
@@ -94,6 +96,143 @@ class CaliBration():
         # Parameters
         params = np.zeros((256+1, 1))
 
+        # #############################################################################
+        # Dataset based latent variables model
+
+        with open('Software_project/junior_gui/My_modules/Effective_data.csv', 'r') as csv_f:
+            csv_wb = csv.reader(csv_f)
+            data_lst = []
+            for row in csv_wb:
+                try:
+                    row = [float(i) for i in row]
+                except:
+                    row = [float(i) for i in row if i != '\ufeff171']
+                    row.insert(0, float(171)) # Waiting for edit
+                data_lst.append(row)
+            csv_f.close()
+        data = np.mat(data_lst)
+        sample_num, var_num = data.shape
+        X = data[:, 0:var_num-1]
+        Y = data[:, -1]
+
+        X_train = X[: np.int(sample_num*0.7)]
+        Y_train = Y[: np.int(sample_num*0.7)]
+        X_test = X[np.int(sample_num*0.7) :]
+        Y_test = Y[np.int(sample_num*0.7) :]
+
+        print("Corr(X)")
+        print(np.round(np.corrcoef(X.T), 2))
+        print("Corr(Y)")
+        print(np.round(np.corrcoef(Y.T), 2))
+
+        # # #############################################################################
+        # # Canonical (symmetric) PLS
+
+        # # Transform data
+        # # ~~~~~~~~~~~~~~
+        # plsca = PLSCanonical(n_components=2)
+        # plsca.fit(X_train, Y_train)
+        # X_train_r, Y_train_r = plsca.transform(X_train, Y_train)
+        # X_test_r, Y_test_r = plsca.transform(X_test, Y_test)
+
+        # # Scatter plot of scores
+        # # ~~~~~~~~~~~~~~~~~~~~~~
+        # # 1) On diagonal plot X vs Y scores on each components
+        # plt.figure(figsize=(12, 8))
+        # plt.subplot(221)
+        # plt.scatter(X_train_r[:, 0], Y_train_r[:, 0], label="train",
+        #             marker="o", s=25)
+        # plt.scatter(X_test_r[:, 0], Y_test_r[:, 0], label="test",
+        #             marker="o", s=25)
+        # plt.xlabel("x scores")
+        # plt.ylabel("y scores")
+        # plt.title('Comp. 1: X vs Y (test corr = %.2f)' %
+        #         np.corrcoef(X_test_r[:, 0], Y_test_r[:, 0])[0, 1])
+        # plt.xticks(())
+        # plt.yticks(())
+        # plt.legend(loc="best")
+
+        # plt.subplot(224)
+        # plt.scatter(X_train_r[:, 1], Y_train_r[:, 1], label="train",
+        #             marker="o", s=25)
+        # plt.scatter(X_test_r[:, 1], Y_test_r[:, 1], label="test",
+        #             marker="o", s=25)
+        # plt.xlabel("x scores")
+        # plt.ylabel("y scores")
+        # plt.title('Comp. 2: X vs Y (test corr = %.2f)' %
+        #         np.corrcoef(X_test_r[:, 1], Y_test_r[:, 1])[0, 1])
+        # plt.xticks(())
+        # plt.yticks(())
+        # plt.legend(loc="best")
+
+        # # 2) Off diagonal plot components 1 vs 2 for X and Y
+        # plt.subplot(222)
+        # plt.scatter(X_train_r[:, 0], X_train_r[:, 1], label="train",
+        #             marker="*", s=50)
+        # plt.scatter(X_test_r[:, 0], X_test_r[:, 1], label="test",
+        #             marker="*", s=50)
+        # plt.xlabel("X comp. 1")
+        # plt.ylabel("X comp. 2")
+        # plt.title('X comp. 1 vs X comp. 2 (test corr = %.2f)'
+        #         % np.corrcoef(X_test_r[:, 0], X_test_r[:, 1])[0, 1])
+        # plt.legend(loc="best")
+        # plt.xticks(())
+        # plt.yticks(())
+
+        # plt.subplot(223)
+        # plt.scatter(Y_train_r[:, 0], Y_train_r[:, 1], label="train",
+        #             marker="*", s=50)
+        # plt.scatter(Y_test_r[:, 0], Y_test_r[:, 1], label="test",
+        #             marker="*", s=50)
+        # plt.xlabel("Y comp. 1")
+        # plt.ylabel("Y comp. 2")
+        # plt.title('Y comp. 1 vs Y comp. 2 , (test corr = %.2f)'
+        #         % np.corrcoef(Y_test_r[:, 0], Y_test_r[:, 1])[0, 1])
+        # plt.legend(loc="best")
+        # plt.xticks(())
+        # plt.yticks(())
+        # plt.show()
+
+        # # #############################################################################
+        # # PLS regression, with multivariate response, a.k.a. PLS2
+
+        # n = 1000
+        # q = 3
+        # p = 10
+        # X = np.random.normal(size=n * p).reshape((n, p))
+        # B = np.array([[1, 2] + [0] * (p - 2)] * q).T
+        # # each Yj = 1*X1 + 2*X2 + noize
+        # Y = np.dot(X, B) + np.random.normal(size=n * q).reshape((n, q)) + 5
+
+        # pls2 = PLSRegression(n_components=3)
+        # pls2.fit(X, Y)
+        # print("True B (such that: Y = XB + Err)")
+        # print(B)
+        # # compare pls2.coef_ with B
+        # print("Estimated B")
+        # print(np.round(pls2.coef_, 1))
+        # pls2.predict(X)
+
+        # # PLS regression, with univariate response, a.k.a. PLS1
+
+        # n = 1000
+        # p = 10
+        # X = np.random.normal(size=n * p).reshape((n, p))
+        # y = X[:, 0] + 2 * X[:, 1] + np.random.normal(size=n * 1) + 5
+        # pls1 = PLSRegression(n_components=3)
+        # pls1.fit(X, y)
+        # # note that the number of components exceeds 1 (the dimension of y)
+        # print("Estimated betas")
+        # print(np.round(pls1.coef_, 1))
+
+        # # #############################################################################
+        # # CCA (PLS mode B with symmetric deflation)
+
+        # cca = CCA(n_components=2)
+        # cca.fit(X_train, Y_train)
+        # X_train_r, Y_train_r = cca.transform(X_train, Y_train)
+        # X_test_r, Y_test_r = cca.transform(X_test, Y_test)
+
 
     def OLS(self, data, label):
         # Parameters initial setting
@@ -127,11 +266,6 @@ class CaliBration():
 
     def predict(self, params):
         print('\nStart predicting!!!\n')
-        # pre_path = 'Software_project/junior_gui/DATA_0519/'
-        # label_mat = self.load_label(grape_num=36, path=pre_path, filename='realData0519.xlsx')
-        # data_mat = self.load_txt(grape_num=36, path=pre_path)
-        # data, label = self.data_tf(data_mat, label_mat, needsave=False)
-        # pre_label = np.dot(data, params)
         label_mat = self.load_label()
         data_mat = self.load_txt(symbol='\←◆*', start=17)
         data, label = self.data_tf(data_mat, label_mat)
@@ -160,19 +294,12 @@ def OLS_debug():
 
 def main():
     cb = CaliBration()
-    # label_mat = cb.load_label()
-    # data_mat = cb.load_txt(symbol='\←◆*', start=17)
-    # data, label = cb.data_tf(data_mat, label_mat)
-    # params = cb.OLS(data, label)
-    # cb.predict(params)
-
-    pre_path = 'Software_project/junior_gui/DATA_0519/'
-    label_mat = cb.load_label(grape_num=36, path=pre_path, filename='Real_grape.xlsx')
-    data_mat = cb.load_txt(grape_num=36, path=pre_path)
-    data, label = cb.data_tf(data_mat, label_mat, needsave=True)
-    print('Training data shape :', data.shape, label.shape)
-    # params = cb.OLS(data, label)
-    # cb.predict(params)
+    # pre_path = 'Software_project/junior_gui/DATA_0519/'
+    # label_mat = cb.load_label(grape_num=36, path=pre_path, filename='Real_grape.xlsx')
+    # data_mat = cb.load_txt(grape_num=36, path=pre_path)
+    # data, label = cb.data_tf(data_mat, label_mat, needsave=True)
+    # print('Training data shape :', data.shape, label.shape)
+    cb.PLS()
 
 if __name__ == '__main__':
     main()

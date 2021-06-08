@@ -1,6 +1,6 @@
 clear;clc;
 %% Load data
-load('DATA_0518/grape_data_0518.mat'); % First_data : (261, 59)
+load('../DATA_0518/grape_data_0518.mat'); % First_data : (261, 59)
 Data = grape_0518';
 % data = Data(:, 2:257); 
 % label = Data(:, 258);
